@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "target": "ES6",
+    "lib": ["ES2022"],
+    "module": "commonjs",
+    "importHelpers": true,
+    "checkJs": true,
+    "outDir": "dist",
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+  },
+}

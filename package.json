@@ -1,0 +1,54 @@
+{
+  "name": "@omniapp-concept/root",
+  "version": "1.0.0",
+  "workspaces": [
+    "./packages/common",
+    "./packages/api",
+    "./packages/front"
+  ],
+  "private": true,
+  "scripts": {
+    "husky:pre-commit:lint": "npm run lint:check:precommit --workspaces",
+    "husky:pre-commit:tsAndTests": "npm run common:build && npm run front:dev:main:ts:noWatch && NODE_ENV=DANGER_JEST_ONLY_NODE_ENV npm run api:test",
+    "husky:pre-commit": "npm run husky:pre-commit:lint && npm run husky:pre-commit:tsAndTests",
+    "hoist": "npm i && npm run prepare",
+    "hoist:prune:only": "rm -rf node_modules packages/*/node_modules",
+    "hoist:prune": "npm run hoist:prune:only && npm run hoist",
+    "common:build": "npm run build --prefix ./packages/common",
+    "common:build:watch": "npm run build:watch --prefix ./packages/common",
+    "common:test": "npm run test --prefix ./packages/common",
+    "api:ts": "npm run ts --prefix ./packages/api",
+    "api:ts:noWatch": "npm run ts:noWatch --prefix ./packages/api",
+    "api:dev": "npm run dev --prefix ./packages/api",
+    "api:dev:inspect-brk": "npm run dev:inspect-brk --prefix ./packages/api",
+    "api:dev:inspect": "npm run dev:inspect --prefix ./packages/api",
+    "api:build": "npm run build --prefix ./packages/api",
+    "api:test:withdb": "npm run test:withdb --prefix ./packages/api",
+    "api:test:withoutdb": "npm run test:withoutdb --prefix ./packages/api",
+    "api:test": "npm run test --prefix ./packages/api",
+    "front:dev:main": "npm run dev:main --prefix ./packages/front",
+    "front:dev:main:ts": "npm run ts --prefix ./packages/front",
+    "front:dev:main:ts:noWatch": "npm run ts:noWatch --prefix ./packages/front",
+    "front:dev:sw": "npm run dev:sw --prefix ./packages/front",
+    "front:server:dev": "npm run server:dev --prefix ./packages/front",
+    "front:build": "npm run build --prefix ./packages/front",
+    "front:build:devbuild": "npm run build:devbuild --prefix ./packages/front",
+    "migrate-mongo:create": "cd packages/api && npm run migrate-mongo:create",
+    "prepare": "node -e \"try { require('husky').install(); } catch(e) { if(e.code !== 'MODULE_NOT_FOUND') throw e; }\""
+  },
+  "devDependencies": {
+    "husky": "8.0.3"
+  },
+  "engines": {
+    "node": ">=18",
+    "npm": ">=9"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/illiaWebDev/omniapp-concept.git"
+  },
+  "bugs": {
+    "url": "https://github.com/illiaWebDev/omniapp-concept/issues"
+  },
+  "homepage": "https://github.com/illiaWebDev/omniapp-concept#readme"
+}

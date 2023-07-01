@@ -1,0 +1,20 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+npm run husky:pre-commit;
+
+exit 0;
+
+# if [ "$(git diff @ --name-only | grep -E "^packages/common/")" != "" ]; then
+
+# fi
+
+# if [ "$(git diff @ --name-only | grep -E "^packages/api/")" != "" ]; then
+#   cd ../packages/api && npm run lint:check:precommit && ;
+#   npm run api:ts:noWatch;
+# fi
+
+# if [ "$(git diff @ --name-only | grep -E "^packages/front/")" != "" ]; then
+#   cd ../packages/front && npm run lint:check:precommit;
+#   npm run front:ts:noWatch;
+# fi

@@ -1,0 +1,10 @@
+curl -d '{"username":"admin@test.com", "password":"mHS6CVt5qaJb79ST9yK"}' -H "Content-Type: application/json" -X POST http://localhost:3001/_jwt/get
+
+
+
+curl -X POST -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NzU5NjY1NjAsImV4cCI6MTY3NjgzMDU2MCwic3ViIjoiN2ZkNTk2YWUtMTlmNi00MTBmLThkZDItMzNkN2Y0MTI4ZGNkIn0.M2B4oi8Q5JTZuS1A5iUw02iqUm9bZTDoWlh9I_CkS3Q" http://localhost:3001/_jwt/reauth
+
+
+curl -X POST -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NzU5NTc0NDgsImV4cCI6MTY3NjgyMTQ0OCwic3ViIjoiN2ZkNTk2YWUtMTlmNi00MTBmLThkZDItMzNkN2Y0MTI4ZGNkIn0.jIQNj8C8W0f_OA7MaJoUPfHasHMQUj5XSy4-rtkZmCc" http://localhost:3001/test
+
+

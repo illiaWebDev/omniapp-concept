@@ -1,0 +1,37 @@
+version: '3'
+services:
+  mongodb:
+    image: mongo:latest
+    volumes:
+      - dbdata:/data/db
+
+  api:
+    build:
+      context: .
+      dockerfile: ./docker-api.Dockerfile
+    environment:
+      NODE_ENV: ${API_NODE_ENV}
+      HOST: ${API_HOST}
+      PORT: ${API_PORT}
+      MONGO_URI: ${API_MONGO_URI}
+      JWT_SECRET: ${API_JWT_SECRET}
+      JWT_EXPIRES_IN: ${API_JWT_EXPIRES_IN}
+      CREATE_DEFAULT_USER_WITH_THIS_PASSWORD: ${API_CREATE_DEFAULT_USER_WITH_THIS_PASSWORD}
+      LOG_LEVEL: ${API_LOG_LEVEL}
+
+  nginx:
+    build:
+      context: .
+      dockerfile: ./docker-nginx.Dockerfile
+      args:
+        API_PORT: ${API_PORT}
+        NODE_ENV: ${FRONT_NODE_ENV}
+        API_URL_FROM_BROWSER: ${FRONT_API_URL_FROM_BROWSER}
+    stdin_open: true
+    tty: true
+    ports:
+      - 80:80
+
+volumes:
+  dbdata:
+

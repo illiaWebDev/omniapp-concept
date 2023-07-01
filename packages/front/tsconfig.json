@@ -1,0 +1,25 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "jsx": "react",
+    "esModuleInterop": true,
+    "lib": ["DOM", "ESNext", "WebWorker"],
+    "baseUrl": "./src",
+    "paths": {
+      "@utils": ["./utils"],
+      "@utils/*": ["./utils/*"],
+      "@components": ["./components"],
+      "@components/*": ["./components/*"],
+    }
+  },
+  "include": [
+    "src/index.tsx",
+    "src/utils/general.d.ts",
+    "src/utils/index.ts",
+    "src/utils/stores/index.ts",
+    "src/sw/index.ts",
+    "src/components/index.ts"
+  ],
+}

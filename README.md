@@ -1,1 +1,1 @@
-# omniapp-concept
+# omniapp-concept project
