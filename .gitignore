@@ -19,3 +19,4 @@ packages/front/public/vendors.js
 packages/front/public/tinymceimgs
 
 docker-img*
+certbot
