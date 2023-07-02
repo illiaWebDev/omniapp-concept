@@ -24,6 +24,7 @@ services:
       - ./certbot/etc-letsencrypt/live/${NGINX_SERVER_NAME}/privkey.pem:/etc/nginx/ssl/privkey.pem:ro
     ports:
       - 80:80
+      - 443:443
 
 volumes:
   dbdata:
