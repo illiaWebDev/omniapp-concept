@@ -1,0 +1,29 @@
+version: '3'
+services:
+  mongodb:
+    image: mongo:latest
+    volumes:
+      - dbdata:/data/db
+
+  api:
+    image: omniapp-concept-api:latest
+    environment:
+      NODE_ENV: ${API_NODE_ENV}
+      HOST: ${API_HOST}
+      PORT: ${API_PORT}
+      MONGO_URI: ${API_MONGO_URI}
+      JWT_SECRET: ${API_JWT_SECRET}
+      JWT_EXPIRES_IN: ${API_JWT_EXPIRES_IN}
+      CREATE_DEFAULT_USER_WITH_THIS_PASSWORD: ${API_CREATE_DEFAULT_USER_WITH_THIS_PASSWORD}
+      LOG_LEVEL: ${API_LOG_LEVEL}
+
+  nginx:
+    image: omniapp-concept-nginx:latest
+    stdin_open: true
+    tty: true
+    ports:
+      - 80:80
+
+volumes:
+  dbdata:
+
