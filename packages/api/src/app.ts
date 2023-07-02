@@ -3,7 +3,7 @@ import compression from 'compression';
 import helmet from 'helmet';
 import cors from 'cors';
 import { getEnvVars } from './utlis/envVariables';
-import { logger, catchAllRouter } from './utlis';
+import { logger, catchAllRouter, getLocals } from './utlis';
 import * as servicesNS from './services';
 import * as servicesSetup from './app_servicesSetup';
 
@@ -37,7 +37,17 @@ export const init = async () => {
   app.use( catchAllRouter );
 
 
-  app.listen( PORT, () => (
+  const server = app.listen( PORT, () => (
     logger.log( { level: 'info', msg: `Application started on ${ HOST }:${ PORT }` } )
   ) );
+
+  process.on( 'SIGTERM', () => {
+    logger.log( { level: 'debug', msg: '6LtNKn7yLC | SIGTERM signal received: closing HTTP server' } );
+
+    server.close( () => {
+      logger.log( { level: 'debug', msg: '6LtNKn7yLC | HTTP server closed' } );
+
+      getLocals( app ).dbClient.close();
+    } );
+  } );
 };

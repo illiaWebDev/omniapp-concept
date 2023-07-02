@@ -67,6 +67,7 @@ FROM nginx:latest
 
 
 ARG API_PORT
+ARG NGINX_SERVER_NAME
 
 
 COPY \
@@ -95,7 +96,7 @@ COPY --from=builder \
 
 
 RUN true  \
-&& envsubst '${API_PORT}' < /etc/nginx/nginx.conf > /etc/nginx/nginx2.conf \
+&& envsubst '${API_PORT} ${NGINX_SERVER_NAME}' < /etc/nginx/nginx.conf > /etc/nginx/nginx2.conf \
 && rm /etc/nginx/nginx.conf \
 && mv /etc/nginx/nginx2.conf /etc/nginx/nginx.conf \
 && true
