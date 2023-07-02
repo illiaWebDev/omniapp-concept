@@ -28,6 +28,9 @@ services:
         NGINX_SERVER_NAME: ${NGINX_SERVER_NAME}
         NODE_ENV: ${FRONT_NODE_ENV}
         API_URL_FROM_BROWSER: ${FRONT_API_URL_FROM_BROWSER}
+    volumes:
+      - ./certbot/etc-letsencrypt/live/${NGINX_SERVER_NAME}/fullchain.pem:/etc/nginx/ssl/fullchain.pem:ro
+      - ./certbot/etc-letsencrypt/live/${NGINX_SERVER_NAME}/privkey.pem:/etc/nginx/ssl/privkey.pem:ro
     ports:
       - 80:80
 
