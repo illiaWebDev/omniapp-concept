@@ -28,8 +28,6 @@ services:
         NGINX_SERVER_NAME: ${NGINX_SERVER_NAME}
         NODE_ENV: ${FRONT_NODE_ENV}
         API_URL_FROM_BROWSER: ${FRONT_API_URL_FROM_BROWSER}
-    stdin_open: true
-    tty: true
     ports:
       - 80:80
 

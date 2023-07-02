@@ -19,8 +19,6 @@ services:
 
   nginx:
     image: omniapp-concept-nginx:latest
-    stdin_open: true
-    tty: true
     ports:
       - 80:80
 
