@@ -13,9 +13,9 @@ import type { GetServices } from '@omniapp-concept/common/dist/services';
 import type { SafeOmit } from '@illia-web-dev/types/dist/types/Omit';
 import type { HistoryProps } from '@omniapp-concept/common/dist/services/_common/WithHistory';
 import { tSuccessRes } from '@illia-web-dev/types/dist/types/CommonRes';
-import { addWithHistory } from '../__common';
-import * as envVarsNS from '../../utlis/envVariables';
-import { logger } from '../../utlis/logger';
+import { addWithHistory } from '../../__common';
+import * as envVarsNS from '../../../utlis/envVariables';
+import { logger } from '../../../utlis/logger';
 
 
 const { verifyAuthExpiredRes, verifyAuthNotAllowedRes, verifyAuthInvalidRes } = AuthPartsNS;
@@ -132,7 +132,6 @@ export class UserService implements serviceNS.Service {
       const typedPayload = payload as AuthPartsNS.JwtPayload;
 
       const maybeAuthData = await this.__serviceAdapter.getAuthParts( {
-        type: 'id',
         id: typedPayload.sub,
       } );
       if ( maybeAuthData === null ) return verifyAuthInvalidRes;
@@ -179,10 +178,7 @@ export class UserService implements serviceNS.Service {
     const result: serviceNS.login.Resp = await ( async () => {
       const adapter = this.__serviceAdapter;
 
-      const maybeAuthParts = await adapter.getAuthParts( {
-        type: 'username',
-        username,
-      } );
+      const maybeAuthParts = await adapter.getAuthParts( { username } );
       if ( maybeAuthParts === null ) return serviceNS.login.INVALID_LOGIN_OR_PASSWORD_RESP;
 
 

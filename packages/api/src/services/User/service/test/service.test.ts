@@ -17,12 +17,12 @@ import type { Millisecond } from '@illia-web-dev/types/dist/types/Time/Milliseco
 import { EpochSecond, getEpochMilliseconds } from '@illia-web-dev/types/dist/types/Time/Time';
 import type { GetServices } from '@omniapp-concept/common/dist/services';
 import { decodeJWT } from '@omniapp-concept/common/dist/services/User/authParts';
-import { UserService } from './service';
-import * as envVarsNS from '../../utlis/envVariables';
-import { resetLogLevel, switchLoggerToErrorLevel } from '../../utlis/logger';
-import * as servicesSetup from '../../app_servicesSetup';
-import { getLocals } from '../../utlis/ILocals';
-import { describeWithTags, jestCleanUp, testTags } from '../../utlis/jest';
+import { UserService } from '../main';
+import * as envVarsNS from '../../../../utlis/envVariables';
+import { resetLogLevel, switchLoggerToErrorLevel } from '../../../../utlis/logger';
+import * as servicesSetup from '../../../../app_servicesSetup';
+import { getLocals } from '../../../../utlis/ILocals';
+import { describeWithTags, jestCleanUp, testTags } from '../../../../utlis/jest';
 
 
 const dummyUserServiceAdapter: adapterNS.Adapter = {
@@ -168,8 +168,7 @@ describeWithTags( [ testTags.UserService ], `${ testTags.UserService }, noDb`, (
       } );
 
 
-      const mockArgToBeExpected: Parameters< adapterNS.Adapter[ 'getAuthParts' ] >[ 0 ] = {
-        type: 'username',
+      const mockArgToBeExpected = {
         username: 'someusername',
       };
       const arg: Parameters< typeof userService.login >[ 0 ] = { ...mockArgToBeExpected, password: 'somepassword' };

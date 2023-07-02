@@ -14,6 +14,7 @@
     "start": "node dist",
     "build": "rm -rf dist && tsc",
     "test": "../../node_modules/.bin/jest --runInBand -c=./jest.config.js",
+    "husky:pre-commit:test": "npm run test",
     "migrate-mongo:create": "node -e \"fs.writeFileSync( require( 'path' ).resolve( __dirname, 'migrations', ( new Date().toISOString().replace(/\\-|\\T|\\:|\\.|\\Z/g, '').slice(0, -3) + '-RENAME-ME.js' ) ), '/** @type { Pick< import( \\'migrate-mongo\\' ), \\'up\\' > } */\\nconst migration = {\\n  up( db, client ) {\\n    /** */\\n  },\\n\\n  down( db, client ) {\\n    /** */\\n  },\\n};\\n\\nmodule.exports = migration;\\n' )\""
   },
   "dependencies": {

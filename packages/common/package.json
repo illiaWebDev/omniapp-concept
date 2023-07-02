@@ -12,8 +12,7 @@
     "ts:noWatch": "tsc --noEmit",
     "ts": "npm run ts:noWatch -- --watch",
     "test": "echo 'Tests for common'",
-    "build": "rm -rf ./dist && tsc --noUnusedParameters --noUnusedLocals --sourceMap false --declarationMap false",
-    "build:watch": "rm -rf ./dist && tsc --watch"
+    "build": "rm -rf ./dist && tsc --noUnusedParameters --noUnusedLocals --sourceMap false --declarationMap false"
   },
   "devDependencies": {
     "@jest/globals": "29.5.0",

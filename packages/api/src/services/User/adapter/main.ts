@@ -1,8 +1,8 @@
-import type { Collection, Db } from 'mongodb';
+import { Collection, Db, MongoError } from 'mongodb';
 import type * as adapterNS from '@omniapp-concept/common/dist/services/User/adapter';
 import * as CoreNS from '@omniapp-concept/common/dist/services/User/core';
 import type { Props as WithObjIdProps } from '@omniapp-concept/common/dist/services/_common/WithObjId';
-import { noMongoIdProjection } from '../__common';
+import { noMongoIdProjection } from '../../__common';
 
 
 type NoDbOnlyFieldsProjectionT = Record< CoreNS.UserDbOnlyFields | WithObjIdProps, 0 >;
@@ -33,7 +33,13 @@ export class UserServiceAdapter implements adapterNS.Adapter {
   create = ( arg: adapterNS.create.Arg ): Promise< adapterNS.create.Resp > => this.__col
     .insertOne( arg )
     .then( () => true )
-    .catch( () => false );
+    .catch( e => {
+      if ( e instanceof MongoError && e.message.startsWith( 'E11000' ) ) {
+        return false;
+      }
+
+      throw e;
+    } );
 
 
   get = ( arg: adapterNS.get.Arg ): Promise< adapterNS.get.Resp > => (
@@ -41,8 +47,7 @@ export class UserServiceAdapter implements adapterNS.Adapter {
   );
 
 
-  async getAuthParts( arg: adapterNS.getAuthParts.Arg ): Promise< adapterNS.getAuthParts.Resp > {
-    const { type, ...query } = arg;
+  async getAuthParts( query: adapterNS.getAuthParts.Arg ): Promise< adapterNS.getAuthParts.Resp > {
     const resp = await this.__col
       .findOne(
         query,

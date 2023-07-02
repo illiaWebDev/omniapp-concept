@@ -17,7 +17,9 @@ export const { describeWithTags, testWithTags } = initJestTags( process.env );
 export const testTags = {
   db: 'db',
   adapter: 'adapter',
+  migrations: 'migrations',
+
   UserService: 'UserService',
-  RegRqstService: 'RegRqstService',
-  verifyJwt: 'verifyJwt',
+
+  smoke: 'smoke',
 } as const;

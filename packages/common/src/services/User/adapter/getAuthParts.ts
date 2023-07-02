@@ -10,10 +10,7 @@ import type { AuthData } from '../authParts';
  * as we will use it to check login credentials. No other method\
  * should return password
  */
-export type Arg = (
-  | { type: 'id' } & Pick< UserInDb, 'id' >
-  | { type: 'username' } & Pick< UserInDb, 'username' >
-);
+export type Arg = Partial< Pick< UserInDb, 'id' | 'username' > >;
 
 export type SuccessResp = AuthData & Pick< UserInDb, 'password' >;
 export type FailureResp = null;
