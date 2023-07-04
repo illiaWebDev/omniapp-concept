@@ -89,9 +89,9 @@ COPY ./nginx/nginx.conf /etc/nginx
 
 COPY --from=builder \
 /usr/src/app/packages/front/public/index.html \
-/usr/src/app/packages/front/public/main.js \
+/usr/src/app/packages/front/public/main*.js \
 /usr/src/app/packages/front/public/sw.js \
-/usr/src/app/packages/front/public/vendors.js \
+/usr/src/app/packages/front/public/vendors*.js \
 /www/public/
 
 

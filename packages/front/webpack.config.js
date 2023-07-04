@@ -23,7 +23,7 @@ const config = {
   },
   output: {
     path: publicDir,
-    filename: '[name].js',
+    filename: '[name].[chunkhash].js',
     publicPath: '/',
   },
   resolve: {

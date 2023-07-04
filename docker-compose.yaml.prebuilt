@@ -20,8 +20,8 @@ services:
   nginx:
     image: omniapp-concept-nginx:latest
     volumes:
-      - ./certbot/etc-letsencrypt/live/${NGINX_SERVER_NAME}/fullchain.pem:/etc/nginx/ssl/fullchain.pem:ro
-      - ./certbot/etc-letsencrypt/live/${NGINX_SERVER_NAME}/privkey.pem:/etc/nginx/ssl/privkey.pem:ro
+      - ./certbot/etc-letsencrypt/live/${NGINX_SERVER_NAME}/fullchain.pem:/etc/nginx/ssl/cert:ro
+      - ./certbot/etc-letsencrypt/live/${NGINX_SERVER_NAME}/privkey.pem:/etc/nginx/ssl/key:ro
     ports:
       - 80:80
       - 443:443

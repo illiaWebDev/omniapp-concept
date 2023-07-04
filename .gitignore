@@ -12,10 +12,10 @@ node_modules
 *.env
 
 dist
-packages/front/public/main.js
+packages/front/public/main*.js
 packages/front/public/sw.js
 packages/front/public/index.html
-packages/front/public/vendors.js
+packages/front/public/vendors*.js
 packages/front/public/tinymceimgs
 
 docker-img*

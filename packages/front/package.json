@@ -15,8 +15,8 @@
     "dev:main": "webpack serve --config ./webpack.config.js",
     "dev:sw": "webpack --config ./webpack.config.sw.js",
     "build:clean": "rm public/main* public/vendors* public/sw.js public/index.html || true",
-    "build": "npm run build:clean && NODE_ENV=production webpack --config ./webpack.config.js && NODE_ENV=production npm run dev:sw && (rm public/vendors.js.LICENSE.txt || true)",
-    "build:devbuild": "npm run build:clean && NODE_ENV=devbuild webpack --config ./webpack.config.js && NODE_ENV=devbuild npm run dev:sw && (rm public/vendors.js.LICENSE.txt || true)"
+    "build": "npm run build:clean && NODE_ENV=production webpack --config ./webpack.config.js && NODE_ENV=production npm run dev:sw && (rm public/vendors*LICENSE.txt || true)",
+    "build:devbuild": "npm run build:clean && NODE_ENV=devbuild webpack --config ./webpack.config.js && NODE_ENV=devbuild npm run dev:sw && (rm public/vendors*LICENSE.txt || true)"
   },
   "devDependencies": {
     "@pmmmwh/react-refresh-webpack-plugin": "0.5.10",

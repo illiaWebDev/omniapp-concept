@@ -16,7 +16,7 @@
     "hoist:prune:only": "rm -rf node_modules packages/*/node_modules",
     "hoist:prune": "npm run hoist:prune:only && npm run hoist",
     "common:build": "npm run build --prefix ./packages/common",
-    "common:build:watch": "npm run build:watch --prefix ./packages/common",
+    "common:ts": "npm run ts --prefix ./packages/common",
     "api:ts": "npm run ts --prefix ./packages/api",
     "api:dev": "npm run dev --prefix ./packages/api",
     "api:dev:inspect-brk": "npm run dev:inspect-brk --prefix ./packages/api",

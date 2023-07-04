@@ -16,7 +16,15 @@ if ( module.hot ) {
 
 
 // Registering Service Worker
-if ( 'serviceWorker' in navigator ) navigator.serviceWorker.register( '/sw.js' );
+if ( 'serviceWorker' in navigator ) {
+  navigator.serviceWorker.register( '/sw.js' )
+    .then( e => {
+      console.info( '0.0003632453400777', e );
+    } )
+    .catch( e => {
+      console.error( '0.0003632453400777', 'err', e );
+    } );
+}
 
 const app = document.getElementById( 'app' );
 if ( !app ) throw new Error( 'no #app in ./src/index' );
