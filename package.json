@@ -9,7 +9,7 @@
   "private": true,
   "scripts": {
     "husky:pre-commit:lint": "npm run lint:check:precommit --workspaces",
-    "husky:pre-commit:ts": "npm run common:build && npm run front:dev:main:ts:noWatch",
+    "husky:pre-commit:ts": "npm run common:build && npm run api:build && npm run front:dev:main:ts:noWatch",
     "husky:pre-commit:test": "NODE_ENV=DANGER_JEST_ONLY_NODE_ENV npm run api:husky:pre-commit:test",
     "husky:pre-commit": "npm run husky:pre-commit:lint && npm run husky:pre-commit:ts && npm run husky:pre-commit:test",
     "hoist": "npm i && npm run prepare",
@@ -21,6 +21,7 @@
     "api:dev": "npm run dev --prefix ./packages/api",
     "api:dev:inspect-brk": "npm run dev:inspect-brk --prefix ./packages/api",
     "api:dev:inspect": "npm run dev:inspect --prefix ./packages/api",
+    "api:build": "npm run build --prefix ./packages/api",
     "api:husky:pre-commit:test": "npm run husky:pre-commit:test --prefix ./packages/api",
     "front:dev:main": "npm run dev:main --prefix ./packages/front",
     "front:dev:main:ts": "npm run ts --prefix ./packages/front",

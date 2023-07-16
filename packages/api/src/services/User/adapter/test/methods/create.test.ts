@@ -31,7 +31,7 @@ describeWithTags( tags, tags.join( ' > ' ), () => {
   const app = express();
 
   beforeAll( async () => {
-    envVarsNS.overrideMongoUri( 'mongodb://localhost:27017/omniapp-usr-adp-create-x4L1I' );
+    envVarsNS.overrideMongoUriForJest( 'x4L1I' );
 
     await setupMigrations( app );
   } );

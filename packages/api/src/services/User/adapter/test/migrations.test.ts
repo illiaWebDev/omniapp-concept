@@ -30,7 +30,7 @@ describeWithTags( tags, tags.join( ' > ' ), () => {
 
 
   beforeAll( async () => {
-    envVarsNS.overrideMongoUri( 'mongodb://localhost:27017/omniapp-concept-user-adp-migr-Rk5d' );
+    envVarsNS.overrideMongoUriForJest( 'Rk5dat' );
 
     await setupMigrations( app );
   } );

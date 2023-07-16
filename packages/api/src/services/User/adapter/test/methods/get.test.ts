@@ -32,7 +32,7 @@ describeWithTags( tags, tags.join( ' > ' ), () => {
   const app = express();
 
   beforeAll( async () => {
-    envVarsNS.overrideMongoUri( 'mongodb://localhost:27017/omniapp-usr-adp-get-vMIHHb' );
+    envVarsNS.overrideMongoUriForJest( 'vMIHHb' );
 
     await setupMigrations( app );
   } );

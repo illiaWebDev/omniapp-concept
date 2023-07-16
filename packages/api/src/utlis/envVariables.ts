@@ -96,8 +96,10 @@ export const overrideLogLevel = ( v?: string ) => {
   else process.env[ envVarNames.LOG_LEVEL ] = v;
 };
 
-export const overrideMongoUri = ( v: string ) => {
-  process.env[ envVarNames.MONGO_URI ] = v;
+export const overrideMongoUriForJest = ( suffix: string ) => {
+  if ( suffix.length >= 15 ) throw new Error( 'DipoA6ZsuZ | suffix is meant to be short unique string' );
+
+  process.env[ envVarNames.MONGO_URI ] = `mongodb://localhost:27017/ominapp-concept-dHdjE4FMoP-${ suffix }`;
 };
 
 export const overrideDefaultUserPassword = ( v: string ) => {
@@ -111,9 +113,9 @@ export const overrideJwtExpiresIn = ( v: string ) => {
   process.env[ envVarNames.JWT_EXPIRES_IN ] = v;
 };
 
-export const overrideHost = ( v: string ) => {
-  process.env[ envVarNames.HOST ] = v;
-};
-export const overridePort = ( v: string ) => {
-  process.env[ envVarNames.PORT ] = v;
-};
+// export const overrideHost = ( v: string ) => {
+//   process.env[ envVarNames.HOST ] = v;
+// };
+// export const overridePort = ( v: string ) => {
+//   process.env[ envVarNames.PORT ] = v;
+// };

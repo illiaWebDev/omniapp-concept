@@ -477,7 +477,7 @@ describeWithTags( [ testTags.UserService, testTags.db ], `${ testTags.UserServic
     const passwordForDefaultUser = 'password';
 
     beforeAll( async () => {
-      envVarsNS.overrideMongoUri( 'mongodb://localhost:27017/omniapp-concept-users-yOcdRiztsp' );
+      envVarsNS.overrideMongoUriForJest( 'yOcdRizt' );
       envVarsNS.overrideDefaultUserPassword( passwordForDefaultUser );
 
       app = await servicesSetup.init();
@@ -533,7 +533,7 @@ describeWithTags( [ testTags.UserService, testTags.db ], `${ testTags.UserServic
     const jwtSecret = 'jwtSecret';
 
     beforeAll( async () => {
-      envVarsNS.overrideMongoUri( 'mongodb://localhost:27017/omniapp-concept-users-owJVQSW80K' );
+      envVarsNS.overrideMongoUriForJest( 'owJVQSW8' );
       envVarsNS.overrideDefaultUserPassword( defaultPassword );
       envVarsNS.overrideJwtSecret( jwtSecret );
       envVarsNS.overrideJwtExpiresIn( '10d' );
