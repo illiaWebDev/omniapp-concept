@@ -8,11 +8,11 @@
   ],
   "private": true,
   "scripts": {
-    "husky:pre-commit:lint": "npm run husky:pre-commit:lint --workspaces",
+    "husky:pre-commit:lint": "npm run husky:pre-commit:lint --prefix packages/common && npm run husky:pre-commit:lint --prefix packages/api && npm run husky:pre-commit:lint --prefix packages/front",
     "husky:pre-commit:ts": "npm run husky:pre-commit:ts --prefix packages/common && npm run husky:pre-commit:ts --prefix packages/api && npm run husky:pre-commit:ts --prefix packages/front",
     "husky:pre-commit:test": "npm run husky:pre-commit:test --prefix packages/common && npm run husky:pre-commit:test --prefix packages/api && npm run husky:pre-commit:test --prefix packages/front",
     "husky:pre-commit:raw": "npm run husky:pre-commit:lint && npm run husky:pre-commit:ts && npm run husky:pre-commit:test",
-    "husky:pre-commit": "git stash -k && RESULT=$(npm run husky:pre-commit:raw &>&1) && (git stash pop || true) && $RESULT",
+    "husky:pre-commit": "git stash -k; npm run husky:pre-commit:raw; PRECOMMIT_RESULT=$?; (git stash pop || true); return $PRECOMMIT_RESULT",
     "hoist": "npm i && npm run prepare",
     "hoist:prune:only": "rm -rf node_modules packages/*/node_modules",
     "hoist:prune": "npm run hoist:prune:only && npm run hoist",
