@@ -9,11 +9,11 @@ import * as UserCore from '@omniapp-concept/common/dist/services/User/core';
 import { ISO_8601_FULL } from '@omniapp-concept/common/dist/helpers';
 import type { GetServices } from '@omniapp-concept/common/dist/services';
 import { getFull } from '@illia-web-dev/types/dist/types/ISO8601/UTC';
-import { UserService } from '../../main';
-import * as envVarsNS from '../../../../../utlis/envVariables';
-import { resetLogLevel, switchLoggerToErrorLevel } from '../../../../../utlis/logger';
-import { describeWithTags } from '../../../../../utlis/jest';
-import { tagsArr } from '../../testUtils';
+import { UserService } from '../main';
+import * as envVarsNS from '../../../../utlis/envVariables';
+import { resetLogLevel, switchLoggerToErrorLevel } from '../../../../utlis/logger';
+import { describeWithTags } from '../../../../utlis/jest';
+import { serviceTagsArr } from '../../__testUtils';
 
 
 const dummyAdapter: adapterNS.Adapter = {
@@ -34,7 +34,7 @@ afterAll( () => {
 
 const full = getFull();
 
-const tags = tagsArr.concat( 'createDefaultOnApiStartup', 'dummyAdapter' );
+const tags = serviceTagsArr.concat( 'createDefaultOnApiStartup', 'dummyAdapter' );
 describeWithTags( tags, tags.join( ' > ' ), () => {
   test( 'returns false if adapter.get responded with user in db', async () => {
     const service = new UserService( {
@@ -82,7 +82,7 @@ describeWithTags( tags, tags.join( ' > ' ), () => {
 
     test( desc, async () => {
       const defaultUserPassword = 'password';
-      envVarsNS.overrideDefaultUserPassword( defaultUserPassword );
+      envVarsNS.overrideDefaultUserPasswordForJest( defaultUserPassword );
 
       const create: adapterNS.Adapter[ 'create' ] = () => Promise.resolve( true );
       const mockedCreate = jest.fn( create );
@@ -119,7 +119,7 @@ describeWithTags( tags, tags.join( ' > ' ), () => {
       expect( arg.updatedAt ).toMatch( ISO_8601_FULL );
 
 
-      envVarsNS.resetEnvVars( [ 'CREATE_DEFAULT_USER_WITH_THIS_PASSWORD' ] );
+      envVarsNS.resetDefaultUserPasswordForJest();
     } );
   }
 } );

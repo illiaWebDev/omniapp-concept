@@ -7,12 +7,12 @@ import type { BcryptPassword } from '@illia-web-dev/types/dist/types/BcryptPassw
 import type * as ISO8601 from '@illia-web-dev/types/dist/types/ISO8601';
 import type { Collection } from 'mongodb';
 import type * as patchNS from '@omniapp-concept/common/dist/services/User/adapter/patch';
-import { UserServiceAdapter } from '../../main';
-import * as envVarsNS from '../../../../../utlis/envVariables';
-import { resetLogLevel, switchLoggerToErrorLevel } from '../../../../../utlis/logger';
-import { setupMigrations } from '../../../../../app_servicesSetup_migrations';
-import { getLocals } from '../../../../../utlis/ILocals';
-import { describeWithTags, jestCleanUp, testTags } from '../../../../../utlis/jest';
+import { UserServiceAdapter } from '../main';
+import * as envVarsNS from '../../../../utlis/envVariables';
+import { resetLogLevel, switchLoggerToErrorLevel } from '../../../../utlis/logger';
+import { setupMigrations } from '../../../../app_servicesSetup_migrations';
+import { getLocals } from '../../../../utlis/ILocals';
+import { describeWithTags, jestCleanUp, testTags } from '../../../../utlis/jest';
 
 
 beforeAll( () => {
@@ -37,7 +37,7 @@ describeWithTags( tags, tags.join( ' > ' ), () => {
   afterAll( async () => {
     await jestCleanUp( app );
 
-    envVarsNS.resetEnvVars( [ 'MONGO_URI' ] );
+    envVarsNS.resetMongoUriForJest();
   } );
 
 

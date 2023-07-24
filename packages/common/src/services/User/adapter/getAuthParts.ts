@@ -8,7 +8,7 @@ import type { AuthData } from '../authParts';
  *
  * this is the only method, that should return hashed password\
  * as we will use it to check login credentials. No other method\
- * should return password
+ * should return hashed password
  */
 export type Arg = Partial< Pick< UserInDb, 'id' | 'username' > >;
 

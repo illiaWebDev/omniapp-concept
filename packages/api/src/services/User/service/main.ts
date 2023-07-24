@@ -11,7 +11,7 @@ import { tSuccessRes } from '@illia-web-dev/types/dist/types/CommonRes';
 import { addWithHistory } from '../../__common';
 import * as envVarsNS from '../../../utlis/envVariables';
 import type { UserServiceConstructorArg, HydrateUser } from './types';
-import * as methods from './methods';
+import * as createDefaultOnApiStartupNS from './createDefaultOnApiStartup';
 
 
 const { verifyAuthExpiredRes, verifyAuthNotAllowedRes, verifyAuthInvalidRes } = AuthPartsNS;
@@ -73,7 +73,7 @@ export class UserService implements serviceNS.Service {
   }
 
   createDefaultOnApiStartup(): Promise< serviceNS.createDefaultOnApiStartup.Resp > {
-    return methods.createDefaultOnApiStartup._( {
+    return createDefaultOnApiStartupNS._( {
       adapter: this.__serviceAdapter,
       defaultUserPassword: this.__defaultUserPassword,
       hydrateUser: this.__hydrateUser,

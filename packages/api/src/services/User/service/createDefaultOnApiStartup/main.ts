@@ -2,8 +2,8 @@ import type * as adapterNS from '@omniapp-concept/common/dist/services/User/adap
 import type * as serviceNS from '@omniapp-concept/common/dist/services/User/service';
 import * as CoreNS from '@omniapp-concept/common/dist/services/User/core';
 import { usernameForDefaultUser } from '@omniapp-concept/common/dist/services/User/core';
-import { logger } from '../../../../../utlis/logger';
-import { HydrateUser, UserServiceConstructorArg } from '../../types';
+import { logger } from '../../../../utlis/logger';
+import { HydrateUser, UserServiceConstructorArg } from '../types';
 
 
 export type Arg = {

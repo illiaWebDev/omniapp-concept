@@ -4,12 +4,12 @@ import express from 'express';
 import { getUserId, UserId } from '@omniapp-concept/common/dist/helpers/UserUtils';
 import * as UserCore from '@omniapp-concept/common/dist/services/User/core';
 import type { BcryptPassword } from '@illia-web-dev/types/dist/types/BcryptPassword';
-import * as envVarsNS from '../../../../utlis/envVariables';
-import { addWithHistory } from '../../../__common';
-import { resetLogLevel, switchLoggerToErrorLevel } from '../../../../utlis/logger';
-import { setupMigrations } from '../../../../app_servicesSetup_migrations';
-import { getLocals } from '../../../../utlis/ILocals';
-import { describeWithTags, jestCleanUp, testTags } from '../../../../utlis/jest';
+import * as envVarsNS from '../../../utlis/envVariables';
+import { addWithHistory } from '../../__common';
+import { resetLogLevel, switchLoggerToErrorLevel } from '../../../utlis/logger';
+import { setupMigrations } from '../../../app_servicesSetup_migrations';
+import { getLocals } from '../../../utlis/ILocals';
+import { describeWithTags, jestCleanUp, testTags } from '../../../utlis/jest';
 
 
 const { UserRole } = UserCore;
@@ -37,7 +37,7 @@ describeWithTags( tags, tags.join( ' > ' ), () => {
   afterAll( async () => {
     await jestCleanUp( app );
 
-    envVarsNS.resetEnvVars( [ 'MONGO_URI' ] );
+    envVarsNS.resetMongoUriForJest();
   } );
 
 

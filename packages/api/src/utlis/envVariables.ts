@@ -84,38 +84,58 @@ export const getEnvVars = (): Rtrn => {
 // will store exact env that whole process was launched with, so that we can
 // seamlessly restore whatever we change during tests
 const originalEnv = JSON.parse( JSON.stringify( process.env ) ) as typeof process.env;
-export const resetEnvVars = ( names: Array< keyof typeof envVarNames > ) => {
-  names.forEach( name => {
-    process.env[ name ] = originalEnv[ name ];
-  } );
-};
+// export const resetEnvVars = ( names: Array< keyof typeof envVarNames > ) => {
+//   names.forEach( name => {
+//     process.env[ name ] = originalEnv[ name ];
+//   } );
+// };
 
+// ===================================================================================
 
 export const overrideLogLevel = ( v?: string ) => {
   if ( v === undefined ) delete process.env[ envVarNames.LOG_LEVEL ];
   else process.env[ envVarNames.LOG_LEVEL ] = v;
 };
+export const resetLogLevel = () => {
+  process.env[ envVarNames.LOG_LEVEL ] = originalEnv[ envVarNames.LOG_LEVEL ];
+};
+
+// ===================================================================================
 
 export const overrideMongoUriForJest = ( suffix: string ) => {
   if ( suffix.length >= 15 ) throw new Error( 'DipoA6ZsuZ | suffix is meant to be short unique string' );
 
   process.env[ envVarNames.MONGO_URI ] = `mongodb://localhost:27017/ominapp-concept-dHdjE4FMoP-${ suffix }`;
 };
+export const resetMongoUriForJest = () => {
+  process.env[ envVarNames.MONGO_URI ] = originalEnv[ envVarNames.MONGO_URI ];
+};
 
-export const overrideDefaultUserPassword = ( v: string ) => {
+// ===================================================================================
+
+export const overrideDefaultUserPasswordForJest = ( v: string ) => {
   process.env[ envVarNames.CREATE_DEFAULT_USER_WITH_THIS_PASSWORD ] = v;
 };
+export const resetDefaultUserPasswordForJest = () => {
+  process.env[ envVarNames.CREATE_DEFAULT_USER_WITH_THIS_PASSWORD ] = (
+    originalEnv[ envVarNames.CREATE_DEFAULT_USER_WITH_THIS_PASSWORD ]
+  );
+};
 
-export const overrideJwtSecret = ( v: string ) => {
+// ===================================================================================
+
+export const overrideJwtSecretForJest = ( v: string ) => {
   process.env[ envVarNames.JWT_SECRET ] = v;
 };
-export const overrideJwtExpiresIn = ( v: string ) => {
-  process.env[ envVarNames.JWT_EXPIRES_IN ] = v;
+export const resetJwtSecretForJest = () => {
+  process.env[ envVarNames.JWT_SECRET ] = originalEnv[ envVarNames.JWT_SECRET ];
 };
 
-// export const overrideHost = ( v: string ) => {
-//   process.env[ envVarNames.HOST ] = v;
-// };
-// export const overridePort = ( v: string ) => {
-//   process.env[ envVarNames.PORT ] = v;
-// };
+// ===================================================================================
+
+export const overrideJwtExpiresInForJest = ( v: string ) => {
+  process.env[ envVarNames.JWT_EXPIRES_IN ] = v;
+};
+export const restJwtExpiresInForJest = () => {
+  process.env[ envVarNames.JWT_EXPIRES_IN ] = originalEnv[ envVarNames.JWT_EXPIRES_IN ];
+};

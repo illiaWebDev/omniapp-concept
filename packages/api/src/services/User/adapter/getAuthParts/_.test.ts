@@ -1,18 +1,17 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { test, expect, beforeAll, afterAll } from '@jest/globals';
 import express from 'express';
-import { getUserId } from '@omniapp-concept/common/dist/helpers/UserUtils';
+import { UserId, getUserId } from '@omniapp-concept/common/dist/helpers/UserUtils';
 import * as UserCore from '@omniapp-concept/common/dist/services/User/core';
 import type { BcryptPassword } from '@illia-web-dev/types/dist/types/BcryptPassword';
 import type * as ISO8601 from '@illia-web-dev/types/dist/types/ISO8601';
-import type { WithObjIdT } from '@omniapp-concept/common/dist/services/_common/WithObjId';
 import type { Collection } from 'mongodb';
-import { UserServiceAdapter } from '../../main';
-import * as envVarsNS from '../../../../../utlis/envVariables';
-import { resetLogLevel, switchLoggerToErrorLevel } from '../../../../../utlis/logger';
-import { setupMigrations } from '../../../../../app_servicesSetup_migrations';
-import { getLocals } from '../../../../../utlis/ILocals';
-import { describeWithTags, jestCleanUp, testTags } from '../../../../../utlis/jest';
+import { UserServiceAdapter } from '../main';
+import * as envVarsNS from '../../../../utlis/envVariables';
+import { resetLogLevel, switchLoggerToErrorLevel } from '../../../../utlis/logger';
+import { setupMigrations } from '../../../../app_servicesSetup_migrations';
+import { getLocals } from '../../../../utlis/ILocals';
+import { describeWithTags, jestCleanUp, testTags } from '../../../../utlis/jest';
 
 
 const { UserRole } = UserCore;
@@ -27,19 +26,19 @@ afterAll( () => {
 
 // ===================================================================================
 
-const tags = [ testTags.UserService, testTags.adapter, 'get' ];
+const tags = [ testTags.UserService, testTags.adapter, 'getAuthParts' ];
 describeWithTags( tags, tags.join( ' > ' ), () => {
   const app = express();
 
   beforeAll( async () => {
-    envVarsNS.overrideMongoUriForJest( 'vMIHHb' );
+    envVarsNS.overrideMongoUriForJest( 'CNnBwa' );
 
     await setupMigrations( app );
   } );
   afterAll( async () => {
     await jestCleanUp( app );
 
-    envVarsNS.resetEnvVars( [ 'MONGO_URI' ] );
+    envVarsNS.resetMongoUriForJest();
   } );
 
 
@@ -47,16 +46,15 @@ describeWithTags( tags, tags.join( ' > ' ), () => {
     const { MongoDB } = getLocals( app );
     const adapter = new UserServiceAdapter( MongoDB );
 
-    const rez = await adapter.get( {
-      username: 'does not exist for UserAdapter.get',
-      status: 'registered',
-    } );
+    const rez1 = await adapter.getAuthParts( { username: '' } );
+    const rez2 = await adapter.getAuthParts( { id: '' as UserId } );
 
-    expect( rez ).toBe( null );
+    expect( rez1 ).toBe( null );
+    expect( rez2 ).toBe( null );
   } );
 
 
-  test( 'gets user by username, omits "password" and "_id" fields', async () => {
+  test( 'gets authParts by username, has only id, password and role props', async () => {
     const { MongoDB } = getLocals( app );
     const adapter = new UserServiceAdapter( MongoDB );
     const col: Collection< UserCore.UserInDb > = MongoDB.collection( UserCore.CollectionName );
@@ -74,23 +72,23 @@ describeWithTags( tags, tags.join( ' > ' ), () => {
     };
 
     await adapter.create( userForCreation );
-    const rez = await adapter.get( { username: userForCreation.username } );
+    const rez = await adapter.getAuthParts( { username: userForCreation.username } );
 
     expect( rez ).not.toBe( null );
 
-    const userOutOfDb = rez as Exclude< typeof rez, null >;
+    const authParts = rez as Exclude< typeof rez, null >;
 
-    expect( Object.keys( userOutOfDb ).length ).toBe( 8 );
+    expect( Object.keys( authParts ).length ).toBe( 3 );
 
-    expect( userForCreation.username ).toBe( userOutOfDb.username );
-    expect( ( userOutOfDb as UserCore.UserInDb ).password ).toBeUndefined();
-    expect( ( userOutOfDb as UserCore.UserOutOfDb & WithObjIdT )._id ).toBeUndefined();
+    expect( userForCreation.id ).toBe( authParts.id );
+    expect( userForCreation.password ).toBe( authParts.password );
+    expect( userForCreation.role ).toStrictEqual( authParts.role );
 
 
     await col.deleteMany();
   } );
 
-  test( 'gets user by id, omits "password" and "_id" fields', async () => {
+  test( 'gets user by id, has only id, password and role props', async () => {
     const { MongoDB } = getLocals( app );
     const adapter = new UserServiceAdapter( MongoDB );
     const col: Collection< UserCore.UserInDb > = MongoDB.collection( UserCore.CollectionName );
@@ -108,17 +106,17 @@ describeWithTags( tags, tags.join( ' > ' ), () => {
     };
 
     await adapter.create( userForCreation );
-    const rez = await adapter.get( { id: userForCreation.id } );
+    const rez = await adapter.getAuthParts( { id: userForCreation.id } );
 
     expect( rez ).not.toBe( null );
 
-    const userOutOfDb = rez as Exclude< typeof rez, null >;
+    const authParts = rez as Exclude< typeof rez, null >;
 
-    expect( Object.keys( userOutOfDb ).length ).toBe( 8 );
+    expect( Object.keys( authParts ).length ).toBe( 3 );
 
-    expect( userForCreation.id ).toBe( userOutOfDb.id );
-    expect( ( userOutOfDb as UserCore.UserInDb ).password ).toBeUndefined();
-    expect( ( userOutOfDb as UserCore.UserOutOfDb & WithObjIdT )._id ).toBeUndefined();
+    expect( userForCreation.id ).toBe( authParts.id );
+    expect( userForCreation.password ).toBe( authParts.password );
+    expect( userForCreation.role ).toStrictEqual( authParts.role );
 
 
     await col.deleteMany();
