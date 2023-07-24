@@ -1,6 +1,6 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-npm run husky:pre-commit;
+NODE_ENV=DANGER_JEST_ONLY_NODE_ENV npm run husky:pre-commit;
 
 exit 0;

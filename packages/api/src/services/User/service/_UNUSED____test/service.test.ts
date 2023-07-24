@@ -1,18 +1,14 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { describe, test, expect, jest, beforeAll, afterAll, afterEach } from '@jest/globals';
+import { describe, test, expect, jest, beforeAll, afterAll } from '@jest/globals';
 import express from 'express';
-import { compare, hash } from 'bcrypt';
+import { hash } from 'bcrypt';
 import { verify } from 'jsonwebtoken';
-import type { Collection } from 'mongodb';
 import type { UserId } from '@omniapp-concept/common/dist/helpers/UserUtils';
 import { usernameForDefaultUser } from '@omniapp-concept/common/dist/services/User/core';
-import * as WithHistory from '@omniapp-concept/common/dist/services/_common/WithHistory';
 import type * as adapterNS from '@omniapp-concept/common/dist/services/User/adapter';
 import type * as serviceNS from '@omniapp-concept/common/dist/services/User/service';
 import * as UserCore from '@omniapp-concept/common/dist/services/User/core';
 import type { BcryptPassword } from '@illia-web-dev/types/dist/types/BcryptPassword';
-import * as ISO8601 from '@illia-web-dev/types/dist/types/ISO8601';
-import { ISO_8601_FULL } from '@omniapp-concept/common/dist/helpers';
 import type { Millisecond } from '@illia-web-dev/types/dist/types/Time/Millisecond';
 import { EpochSecond, getEpochMilliseconds } from '@illia-web-dev/types/dist/types/Time/Time';
 import type { GetServices } from '@omniapp-concept/common/dist/services';
@@ -43,101 +39,101 @@ afterAll( () => {
 
 
 describeWithTags( [ testTags.UserService ], `${ testTags.UserService }, noDb`, () => {
-  describe( 'createDefaultOnApiStartup', () => {
-    afterEach( () => {
-      envVarsNS.resetEnvVars( [ 'CREATE_DEFAULT_USER_WITH_THIS_PASSWORD' ] );
-    } );
+  // describe( 'createDefaultOnApiStartup', () => {
+  //   afterEach( () => {
+  //     envVarsNS.resetEnvVars( [ 'CREATE_DEFAULT_USER_WITH_THIS_PASSWORD' ] );
+  //   } );
 
-    // test( 'returns false if no password for default user is set in env', async () => {
-    //   envVarsNS.overrideDefaultUserPassword();
+  //   // test( 'returns false if no password for default user is set in env', async () => {
+  //   //   envVarsNS.overrideDefaultUserPassword();
 
-    //   const userService = new UserService( {
-    //     adp: dummyUserServiceAdapter,
-    //     getServices,
-    //   } );
+  //   //   const userService = new UserService( {
+  //   //     adp: dummyUserServiceAdapter,
+  //   //     getServices,
+  //   //   } );
 
-    //   const resp = await userService.createDefaultOnApiStartup();
-    //   expect( resp ).toBe( false );
-    // } );
+  //   //   const resp = await userService.createDefaultOnApiStartup();
+  //   //   expect( resp ).toBe( false );
+  //   // } );
 
-    test( 'returns false if adapter returned existing user', async () => {
-      envVarsNS.overrideDefaultUserPassword( 'password' );
+  //   test( 'returns false if adapter returned existing user', async () => {
+  //     envVarsNS.overrideDefaultUserPassword( 'password' );
 
-      const full = ISO8601.UTC.getFull();
+  //     const full = ISO8601.UTC.getFull();
 
-      const get: adapterNS.Adapter[ 'get' ] = () => Promise.resolve( {
-        id: '' as UserId,
-        createdAt: full,
-        updatedAt: full,
-        role: [ UserCore.UserRole.admin ],
-        status: 'registered',
-        username: '',
-        updatedBy: 'system',
-        createdBy: 'system',
-      } );
-      const mockedGet = jest.fn( get );
+  //     const get: adapterNS.Adapter[ 'get' ] = () => Promise.resolve( {
+  //       id: '' as UserId,
+  //       createdAt: full,
+  //       updatedAt: full,
+  //       role: [ UserCore.UserRole.admin ],
+  //       status: 'registered',
+  //       username: '',
+  //       updatedBy: 'system',
+  //       createdBy: 'system',
+  //     } );
+  //     const mockedGet = jest.fn( get );
 
-      const userService = new UserService( {
-        adp: {
-          ...dummyUserServiceAdapter,
-          get: mockedGet,
-        },
-        getServices,
-      } );
+  //     const userService = new UserService( {
+  //       adp: {
+  //         ...dummyUserServiceAdapter,
+  //         get: mockedGet,
+  //       },
+  //       getServices,
+  //     } );
 
-      const resp = await userService.createDefaultOnApiStartup();
-
-
-      expect( resp ).toEqual( false );
-      expect( mockedGet ).toBeCalledTimes( 1 );
-
-      const { lastCall } = mockedGet.mock;
-      expect( lastCall ).toBeTruthy();
+  //     const resp = await userService.createDefaultOnApiStartup();
 
 
-      const [ arg ] = lastCall as Exclude< typeof lastCall, undefined >;
+  //     expect( resp ).toEqual( false );
+  //     expect( mockedGet ).toBeCalledTimes( 1 );
 
-      expect( arg.username ).toEqual( usernameForDefaultUser );
-    } );
-
-    test( 'calls Adapter.create with correct param', async () => {
-      const password = 'password';
-      envVarsNS.overrideDefaultUserPassword( password );
-
-      const create: adapterNS.Adapter[ 'create' ] = () => Promise.resolve( true );
-      const mockedCreate = jest.fn( create );
-
-      const userService = new UserService( {
-        adp: {
-          ...dummyUserServiceAdapter,
-          create: mockedCreate,
-        },
-        getServices,
-      } );
-
-      const resp = await userService.createDefaultOnApiStartup();
+  //     const { lastCall } = mockedGet.mock;
+  //     expect( lastCall ).toBeTruthy();
 
 
-      expect( resp ).toEqual( true );
-      expect( mockedCreate ).toBeCalledTimes( 1 );
+  //     const [ arg ] = lastCall as Exclude< typeof lastCall, undefined >;
 
-      const { lastCall } = mockedCreate.mock;
-      expect( lastCall ).toBeTruthy();
+  //     expect( arg.username ).toEqual( usernameForDefaultUser );
+  //   } );
+
+  //   test( 'calls Adapter.create with correct param', async () => {
+  //     const password = 'password';
+  //     envVarsNS.overrideDefaultUserPassword( password );
+
+  //     const create: adapterNS.Adapter[ 'create' ] = () => Promise.resolve( true );
+  //     const mockedCreate = jest.fn( create );
+
+  //     const userService = new UserService( {
+  //       adp: {
+  //         ...dummyUserServiceAdapter,
+  //         create: mockedCreate,
+  //       },
+  //       getServices,
+  //     } );
+
+  //     const resp = await userService.createDefaultOnApiStartup();
 
 
-      const [ arg ] = lastCall as Exclude< typeof lastCall, undefined >;
+  //     expect( resp ).toEqual( true );
+  //     expect( mockedCreate ).toBeCalledTimes( 1 );
 
-      expect( arg.username ).toEqual( usernameForDefaultUser );
-      expect( arg.role ).toEqual( [ UserCore.UserRole.admin, UserCore.UserRole.powerUser, UserCore.UserRole.user ] );
+  //     const { lastCall } = mockedCreate.mock;
+  //     expect( lastCall ).toBeTruthy();
 
-      expect( await compare( password, arg.password ) ).toBeTruthy();
 
-      expect( arg.createdBy ).toEqual( WithHistory.SYSTEM );
-      expect( arg.updatedBy ).toEqual( WithHistory.SYSTEM );
-      expect( arg.createdAt ).toMatch( ISO_8601_FULL );
-      expect( arg.updatedAt ).toMatch( ISO_8601_FULL );
-    } );
-  } );
+  //     const [ arg ] = lastCall as Exclude< typeof lastCall, undefined >;
+
+  //     expect( arg.username ).toEqual( usernameForDefaultUser );
+  //     expect( arg.role ).toEqual( [ UserCore.UserRole.admin, UserCore.UserRole.powerUser, UserCore.UserRole.user ] );
+
+  //     expect( await compare( password, arg.password ) ).toBeTruthy();
+
+  //     expect( arg.createdBy ).toEqual( WithHistory.SYSTEM );
+  //     expect( arg.updatedBy ).toEqual( WithHistory.SYSTEM );
+  //     expect( arg.createdAt ).toMatch( ISO_8601_FULL );
+  //     expect( arg.updatedAt ).toMatch( ISO_8601_FULL );
+  //   } );
+  // } );
 
   describe( 'login', () => {
     const jwtSecret = 'secretForGetJwt';
@@ -472,60 +468,60 @@ describeWithTags( [ testTags.UserService ], `${ testTags.UserService }, noDb`, (
 // ===================================================================================
 
 describeWithTags( [ testTags.UserService, testTags.db ], `${ testTags.UserService } ${ testTags.db }`, () => {
-  describe( 'createDefaultOnApiStartup', () => {
-    let app = express();
-    const passwordForDefaultUser = 'password';
+  // describe( 'createDefaultOnApiStartup', () => {
+  //   let app = express();
+  //   const passwordForDefaultUser = 'password';
 
-    beforeAll( async () => {
-      envVarsNS.overrideMongoUriForJest( 'yOcdRizt' );
-      envVarsNS.overrideDefaultUserPassword( passwordForDefaultUser );
+  //   beforeAll( async () => {
+  //     envVarsNS.overrideMongoUriForJest( 'yOcdRizt' );
+  //     envVarsNS.overrideDefaultUserPassword( passwordForDefaultUser );
 
-      app = await servicesSetup.init();
-    } );
-    afterAll( async () => {
-      await jestCleanUp( app );
+  //     app = await servicesSetup.init();
+  //   } );
+  //   afterAll( async () => {
+  //     await jestCleanUp( app );
 
-      envVarsNS.resetEnvVars( [ 'MONGO_URI', 'CREATE_DEFAULT_USER_WITH_THIS_PASSWORD' ] );
-    } );
+  //     envVarsNS.resetEnvVars( [ 'MONGO_URI', 'CREATE_DEFAULT_USER_WITH_THIS_PASSWORD' ] );
+  //   } );
 
-    test( 'successfully created default user on api startup', async () => {
-      const { MongoDB } = getLocals( app );
-      const col = MongoDB.collection( UserCore.CollectionName ) as Collection< UserCore.UserInDb >;
+  //   test( 'successfully created default user on api startup', async () => {
+  //     const { MongoDB } = getLocals( app );
+  //     const col = MongoDB.collection( UserCore.CollectionName ) as Collection< UserCore.UserInDb >;
 
-      const arg: Pick< UserCore.UserInDb, 'username' > = { username: usernameForDefaultUser };
-      const [ count, user ] = await Promise.all( [
-        col.countDocuments( arg ),
-        col.findOne( arg ),
-      ] );
+  //     const arg: Pick< UserCore.UserInDb, 'username' > = { username: usernameForDefaultUser };
+  //     const [ count, user ] = await Promise.all( [
+  //       col.countDocuments( arg ),
+  //       col.findOne( arg ),
+  //     ] );
 
-      expect( count ).toBe( 1 );
-      expect( user ).not.toBe( null );
+  //     expect( count ).toBe( 1 );
+  //     expect( user ).not.toBe( null );
 
-      const typedUser = user as Exclude< typeof user, null >;
+  //     const typedUser = user as Exclude< typeof user, null >;
 
-      expect( typedUser.username ).toBe( usernameForDefaultUser );
-      expect( typedUser.role ).toStrictEqual(
-        [ UserCore.UserRole.admin, UserCore.UserRole.powerUser, UserCore.UserRole.user ],
-      );
-      expect( await compare( passwordForDefaultUser, typedUser.password ) ).toBeTruthy();
+  //     expect( typedUser.username ).toBe( usernameForDefaultUser );
+  //     expect( typedUser.role ).toStrictEqual(
+  //       [ UserCore.UserRole.admin, UserCore.UserRole.powerUser, UserCore.UserRole.user ],
+  //     );
+  //     expect( await compare( passwordForDefaultUser, typedUser.password ) ).toBeTruthy();
 
-      expect( typedUser.createdBy ).toBe( WithHistory.SYSTEM );
-      expect( typedUser.updatedBy ).toBe( WithHistory.SYSTEM );
-    } );
+  //     expect( typedUser.createdBy ).toBe( WithHistory.SYSTEM );
+  //     expect( typedUser.updatedBy ).toBe( WithHistory.SYSTEM );
+  //   } );
 
-    test( 'does not create second default user', async () => {
-      const { services: { user: userService }, MongoDB } = getLocals( app );
-      const col = MongoDB.collection( UserCore.CollectionName ) as Collection< UserCore.UserInDb >;
-      const res = await userService.createDefaultOnApiStartup();
+  //   test( 'does not create second default user', async () => {
+  //     const { services: { user: userService }, MongoDB } = getLocals( app );
+  //     const col = MongoDB.collection( UserCore.CollectionName ) as Collection< UserCore.UserInDb >;
+  //     const res = await userService.createDefaultOnApiStartup();
 
-      expect( res ).toBe( false );
+  //     expect( res ).toBe( false );
 
-      const arg: Pick< UserCore.UserInDb, 'username' > = { username: usernameForDefaultUser };
-      const count = await col.countDocuments( arg );
+  //     const arg: Pick< UserCore.UserInDb, 'username' > = { username: usernameForDefaultUser };
+  //     const count = await col.countDocuments( arg );
 
-      expect( count ).toBe( 1 );
-    } );
-  } );
+  //     expect( count ).toBe( 1 );
+  //   } );
+  // } );
 
   describe( 'getJwt', () => {
     let app = express();

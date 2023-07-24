@@ -4,41 +4,19 @@ import ms from 'ms';
 import type { BcryptPassword } from '@illia-web-dev/types/dist/types/BcryptPassword';
 import { getUserId, UserId } from '@omniapp-concept/common/dist/helpers/UserUtils';
 import * as serviceNS from '@omniapp-concept/common/dist/services/User/service';
-import type * as adapterNS from '@omniapp-concept/common/dist/services/User/adapter';
 import * as CoreNS from '@omniapp-concept/common/dist/services/User/core';
 import * as AuthPartsNS from '@omniapp-concept/common/dist/services/User/authParts';
-import { usernameForDefaultUser } from '@omniapp-concept/common/dist/services/User/core';
 import { getEpochSecond, type EpochSecond } from '@illia-web-dev/types/dist/types/Time/Time';
-import type { GetServices } from '@omniapp-concept/common/dist/services';
-import type { SafeOmit } from '@illia-web-dev/types/dist/types/Omit';
-import type { HistoryProps } from '@omniapp-concept/common/dist/services/_common/WithHistory';
 import { tSuccessRes } from '@illia-web-dev/types/dist/types/CommonRes';
 import { addWithHistory } from '../../__common';
 import * as envVarsNS from '../../../utlis/envVariables';
-import { logger } from '../../../utlis/logger';
+import type { UserServiceConstructorArg, HydrateUser } from './types';
+import * as methods from './methods';
 
 
 const { verifyAuthExpiredRes, verifyAuthNotAllowedRes, verifyAuthInvalidRes } = AuthPartsNS;
 
-export type UserServiceConstructorArg = {
-  adp: adapterNS.Adapter;
-  getServices: GetServices;
-};
 
-type HydrateUser = (
-  arg: {
-    userData: (
-      & SafeOmit<
-        CoreNS.UserInDb,
-        | CoreNS.UserDbOnlyFields
-        | HistoryProps
-        | typeof CoreNS.props.id
-      >
-      & { [ CoreNS.props.password ]: string }
-    );
-    authorId: UserId | null;
-  }
-) => Promise< CoreNS.UserInDb >;
 export class UserService implements serviceNS.Service {
   __serviceAdapter: UserServiceConstructorArg[ 'adp' ];
 
@@ -94,31 +72,12 @@ export class UserService implements serviceNS.Service {
     this.__jwtExpiresIn = JWT_EXPIRES_IN;
   }
 
-  async createDefaultOnApiStartup(): Promise< serviceNS.createDefaultOnApiStartup.Resp > {
-    const defaultUserPassword = this.__defaultUserPassword;
-    if ( defaultUserPassword === undefined ) {
-      return false;
-    }
-
-
-    logger.log( { level: 'debug', tags: [ 'user', 'createDefaultOnApiStartup' ] } );
-    const adapter = this.__serviceAdapter;
-
-    const maybeDefaultUser = await adapter.get( { username: usernameForDefaultUser } );
-    if ( maybeDefaultUser !== null ) return false;
-
-
-    const defaultUser: adapterNS.create.Arg = await this.__hydrateUser( {
-      authorId: null,
-      userData: {
-        username: usernameForDefaultUser,
-        role: [ CoreNS.UserRole.admin, CoreNS.UserRole.powerUser, CoreNS.UserRole.user ],
-        password: defaultUserPassword,
-        status: 'registered',
-      },
+  createDefaultOnApiStartup(): Promise< serviceNS.createDefaultOnApiStartup.Resp > {
+    return methods.createDefaultOnApiStartup._( {
+      adapter: this.__serviceAdapter,
+      defaultUserPassword: this.__defaultUserPassword,
+      hydrateUser: this.__hydrateUser,
     } );
-
-    return adapter.create( defaultUser );
   }
 
 

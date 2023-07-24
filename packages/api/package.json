@@ -4,17 +4,16 @@
   "private": true,
   "scripts": {
     "lint:check": "eslint --ext js,jsx,ts,tsx src",
-    "lint:check:precommit": "npm run lint:check -- --max-warnings=0",
     "lint:fix": "npm run lint:check -- --fix",
-    "ts:noWatch": "tsc --noEmit",
-    "ts": "npm run ts:noWatch -- --watch",
+    "husky:pre-commit:lint": "npm run lint:check -- --max-warnings=0",
+    "ts": "tsc --noEmit --watch",
+    "build": "rm -rf ./dist && tsc --noUnusedParameters --noUnusedLocals --sourceMap false --declarationMap false",
+    "husky:pre-commit:ts": "npm run build -- --noEmit",
     "dev": "nodemon -w .env -w src -r dotenv/config --transpile-only src/index.ts",
     "dev:inspect": "nodemon -w .env -w src --exec \"node --inspect -r dotenv/config -r ts-node/register src/index.ts\"",
     "dev:inspect-brk": "nodemon -w .env -w src --exec \"node --inspect-brk -r dotenv/config -r ts-node/register src/index.ts\"",
     "start": "node dist",
-    "build": "rm -rf dist && tsc --noUnusedParameters --noUnusedLocals --sourceMap false --declarationMap false",
-    "test": "../../node_modules/.bin/jest --runInBand -c=./jest.config.js",
-    "husky:pre-commit:test": "npm run test",
+    "husky:pre-commit:test": "../../node_modules/.bin/jest --runInBand -c=./jest.config.js",
     "migrate-mongo:create": "node -e \"fs.writeFileSync( require( 'path' ).resolve( __dirname, 'migrations', ( new Date().toISOString().replace(/\\-|\\T|\\:|\\.|\\Z/g, '').slice(0, -3) + '-RENAME-ME.js' ) ), '/** @type { Pick< import( \\'migrate-mongo\\' ), \\'up\\' > } */\\nconst migration = {\\n  up( db, client ) {\\n    /** */\\n  },\\n\\n  down( db, client ) {\\n    /** */\\n  },\\n};\\n\\nmodule.exports = migration;\\n' )\""
   },
   "dependencies": {

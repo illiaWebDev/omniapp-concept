@@ -7,16 +7,17 @@
   "types": "dist/index.d.js",
   "scripts": {
     "lint:check": "eslint --ext js,jsx,ts,tsx src",
-    "lint:check:precommit": "npm run lint:check -- --max-warnings=0",
     "lint:fix": "npm run lint:check -- --fix",
-    "ts:noWatch": "tsc --noEmit",
-    "ts": "npm run ts:noWatch -- --watch",
-    "test": "echo 'Tests for front'",
+    "husky:pre-commit:lint": "npm run lint:check -- --max-warnings=0",
+    "ts:noEmit": "tsc --noEmit",
+    "ts": "npm run ts:noEmit -- --watch",
+    "husky:pre-commit:ts": "npm run ts:noEmit -- --noUnusedParameters --noUnusedLocals --sourceMap false --declarationMap false",
     "dev:main": "webpack serve --config ./webpack.config.js",
     "dev:sw": "webpack --config ./webpack.config.sw.js",
     "build:clean": "rm public/main* public/vendors* public/sw.js public/index.html || true",
     "build": "npm run build:clean && NODE_ENV=production webpack --config ./webpack.config.js && NODE_ENV=production npm run dev:sw && (rm public/vendors*LICENSE.txt || true)",
-    "build:devbuild": "npm run build:clean && NODE_ENV=devbuild webpack --config ./webpack.config.js && NODE_ENV=devbuild npm run dev:sw && (rm public/vendors*LICENSE.txt || true)"
+    "build:devbuild": "npm run build:clean && NODE_ENV=devbuild webpack --config ./webpack.config.js && NODE_ENV=devbuild npm run dev:sw && (rm public/vendors*LICENSE.txt || true)",
+    "husky:pre-commit:test": "echo 'Tests for front'"
   },
   "devDependencies": {
     "@pmmmwh/react-refresh-webpack-plugin": "0.5.10",

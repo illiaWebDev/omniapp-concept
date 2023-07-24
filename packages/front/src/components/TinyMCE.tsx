@@ -19,6 +19,7 @@ export const TinyMCE: React.FC< TinyMCEProps > = React.memo( p => {
   const editorRef = React.useRef< TinyMCEEditor >();
   const onTinyInit = React.useCallback< NonNullable< IAllProps[ 'onInit' ] > >(
     ( evt, editor ) => {
+      void evt;
       editorRef.current = editor;
     },
     [],

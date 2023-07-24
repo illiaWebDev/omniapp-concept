@@ -7,11 +7,12 @@
   "types": "dist/index.d.js",
   "scripts": {
     "lint:check": "eslint --ext js,jsx,ts,tsx src",
-    "lint:check:precommit": "npm run lint:check -- --max-warnings=0",
     "lint:fix": "npm run lint:check -- --fix",
-    "ts": "tsc --watch",
-    "test": "echo 'Tests for common'",
-    "build": "rm -rf ./dist && tsc --noUnusedParameters --noUnusedLocals --sourceMap false --declarationMap false"
+    "husky:pre-commit:lint": "npm run lint:check -- --max-warnings=0",
+    "ts": "rm -rf ./dist && tsc --watch",
+    "build": "rm -rf ./dist && tsc --noUnusedParameters --noUnusedLocals --sourceMap false --declarationMap false",
+    "husky:pre-commit:ts": "npm run build",
+    "husky:pre-commit:test": "../../node_modules/.bin/jest --runInBand -c=./jest.config.js"
   },
   "devDependencies": {
     "@jest/globals": "29.5.0",
