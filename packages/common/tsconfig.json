@@ -1,15 +1,15 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "rootDir": "src",
-    "outDir": "dist",
+    "rootDir": "./src",
+    "outDir": "./dist",
     "declaration": true,
     "sourceMap": true,
     "declarationMap": true,
   },
   "include": [
-    "src/index.ts",
-    "src/aggregateTests.ts",
-    "src/helpers/index.ts",
+    "./src/index.ts",
+    "./src/aggregateTests.ts",
+    "./src/helpers/index.ts",
   ],
 }

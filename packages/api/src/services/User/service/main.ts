@@ -1,20 +1,13 @@
-import { hash, compare } from 'bcrypt';
-import jwtLib from 'jsonwebtoken';
-import ms from 'ms';
-import type { BcryptPassword } from '@illia-web-dev/types/dist/types/BcryptPassword';
-import { getUserId, UserId } from '@omniapp-concept/common/dist/helpers/UserUtils';
-import * as serviceNS from '@omniapp-concept/common/dist/services/User/service';
-import * as CoreNS from '@omniapp-concept/common/dist/services/User/core';
-import * as AuthPartsNS from '@omniapp-concept/common/dist/services/User/authParts';
-import { getEpochSecond, type EpochSecond } from '@illia-web-dev/types/dist/types/Time/Time';
-import { tSuccessRes } from '@illia-web-dev/types/dist/types/CommonRes';
-import { addWithHistory } from '../../__common';
+import type * as serviceNS from '@omniapp-concept/common/dist/services/User/service';
 import * as envVarsNS from '../../../utlis/envVariables';
-import type { UserServiceConstructorArg, HydrateUser } from './types';
+import type { UserServiceConstructorArg } from './types';
 import * as createDefaultOnApiStartupNS from './createDefaultOnApiStartup';
-
-
-const { verifyAuthExpiredRes, verifyAuthNotAllowedRes, verifyAuthInvalidRes } = AuthPartsNS;
+import * as verifyAuthNS from './verifyAuth';
+import * as getMeNS from './getMe';
+import * as loginNS from './login';
+import * as registerNS from './register';
+import * as getListForAdminNS from './getListForAdmin';
+import * as approveRegRequestNS from './approveRegRequest';
 
 
 export class UserService implements serviceNS.Service {
@@ -33,33 +26,6 @@ export class UserService implements serviceNS.Service {
   __jwtExpiresIn: envVarsNS.Rtrn[ 'JWT_EXPIRES_IN' ];
 
 
-  __getJwt = ( id: UserId ): AuthPartsNS.JWTStr => {
-    const { __jwtSecret, __jwtExpiresIn } = this;
-
-    const iat = getEpochSecond();
-    const data: AuthPartsNS.JwtPayload = {
-      sub: id,
-      exp: iat + Math.floor( ms( __jwtExpiresIn ) / 1_000 ) as EpochSecond,
-      iat,
-    };
-
-    return jwtLib.sign( data, __jwtSecret ) as AuthPartsNS.JWTStr;
-  };
-
-  // ===================================================================================
-
-  // eslint-disable-next-line class-methods-use-this
-  __hydrateUser: HydrateUser = async ( { userData, authorId } ) => {
-    const user: CoreNS.UserInDb = {
-      id: getUserId(),
-      ...addWithHistory( {}, authorId ),
-      ...userData,
-      password: ( await hash( userData.password, CoreNS.SALT_ROUNDS ) ) as BcryptPassword,
-    };
-
-    return user;
-  };
-
   // ===================================================================================
 
   constructor( { adp, getServices }: UserServiceConstructorArg ) {
@@ -72,133 +38,59 @@ export class UserService implements serviceNS.Service {
     this.__jwtExpiresIn = JWT_EXPIRES_IN;
   }
 
-  createDefaultOnApiStartup(): Promise< serviceNS.createDefaultOnApiStartup.Resp > {
-    return createDefaultOnApiStartupNS._( {
+
+  createDefaultOnApiStartup = (): Promise< serviceNS.createDefaultOnApiStartup.Resp > => (
+    createDefaultOnApiStartupNS._( {
       adapter: this.__serviceAdapter,
       defaultUserPassword: this.__defaultUserPassword,
-      hydrateUser: this.__hydrateUser,
-    } );
-  }
+    } )
+  );
 
+  verifyAuth = ( arg: serviceNS.verifyAuth.Arg ): Promise< serviceNS.verifyAuth.Resp > => (
+    verifyAuthNS._( {
+      arg,
+      adapter: this.__serviceAdapter,
+      jwtSecret: this.__jwtSecret,
+    } )
+  );
 
-  async verifyAuth( { jwt, allowedRoles }: serviceNS.verifyAuth.Arg ): Promise< serviceNS.verifyAuth.Resp > {
-    if ( jwt === undefined ) return verifyAuthInvalidRes;
+  getMe = ( arg: serviceNS.getMe.Arg ): Promise< serviceNS.getMe.Resp > => (
+    getMeNS._( {
+      adapter: this.__serviceAdapter,
+      verifyAuth: this.verifyAuth,
+      arg,
+    } )
+  );
 
-    try {
-      const payload = jwtLib.verify( jwt, this.__jwtSecret );
-      if ( typeof payload === 'string' ) return verifyAuthInvalidRes;
+  login = ( arg: serviceNS.login.Arg ): Promise< serviceNS.login.Resp > => (
+    loginNS._( {
+      adapter: this.__serviceAdapter,
+      arg,
+      jwtExpiresIn: this.__jwtExpiresIn,
+      jwtSecret: this.__jwtSecret,
+    } )
+  );
 
-      const typedPayload = payload as AuthPartsNS.JwtPayload;
+  register = ( arg: serviceNS.register.Arg ): Promise< serviceNS.register.Resp > => (
+    registerNS._( {
+      adapter: this.__serviceAdapter,
+      arg,
+    } )
+  );
 
-      const maybeAuthData = await this.__serviceAdapter.getAuthParts( {
-        id: typedPayload.sub,
-      } );
-      if ( maybeAuthData === null ) return verifyAuthInvalidRes;
+  getListForAdmin = ( arg: serviceNS.getListForAdmin.Arg ): Promise< serviceNS.getListForAdmin.Resp > => (
+    getListForAdminNS._( {
+      adapter: this.__serviceAdapter,
+      arg,
+      verifyAuth: this.verifyAuth,
+    } )
+  );
 
-      const sucessResp: AuthPartsNS.VerifyAuthSuccessRes = {
-        success: true,
-        data: {
-          jwtPayload: typedPayload,
-          authData: { id: maybeAuthData.id, role: maybeAuthData.role },
-        },
-      };
-
-      if ( allowedRoles === undefined ) return sucessResp;
-
-
-      return CoreNS.matchesAllowedRole( allowedRoles, sucessResp.data.authData.role )
-        ? sucessResp
-        : verifyAuthNotAllowedRes;
-    } catch ( e ) {
-      return e instanceof jwtLib.TokenExpiredError
-        ? verifyAuthExpiredRes
-        : verifyAuthInvalidRes;
-    }
-  }
-
-  async getMe( arg: serviceNS.getMe.Arg ): Promise< serviceNS.getMe.Resp > {
-    const verifyAuthRes = await this.verifyAuth( arg );
-    if ( verifyAuthRes.success === false ) return verifyAuthRes;
-
-    const { id } = verifyAuthRes.data.authData;
-    const data = await this.__serviceAdapter.get( { id, status: 'registered' } );
-    // this should be impossible but whatever
-    if ( data === null ) return verifyAuthInvalidRes;
-
-    return {
-      success: true,
-      data,
-    };
-  }
-
-  async login( arg: serviceNS.login.Arg ): Promise< serviceNS.login.Resp > {
-    const { password, username } = arg;
-
-    const result: serviceNS.login.Resp = await ( async () => {
-      const adapter = this.__serviceAdapter;
-
-      const maybeAuthParts = await adapter.getAuthParts( { username } );
-      if ( maybeAuthParts === null ) return serviceNS.login.INVALID_LOGIN_OR_PASSWORD_RESP;
-
-
-      const isPasswordCorrect = await compare( password, maybeAuthParts.password );
-      if ( !isPasswordCorrect ) return serviceNS.login.INVALID_LOGIN_OR_PASSWORD_RESP;
-
-      const user = await adapter.get( { username, status: 'registered' } );
-      if ( user === null ) return serviceNS.login.INVALID_LOGIN_OR_PASSWORD_RESP;
-
-      const result: serviceNS.login.Resp = {
-        success: true,
-        data: {
-          jwt: this.__getJwt( maybeAuthParts.id ),
-          user,
-        },
-      };
-
-      return result;
-    } )();
-
-    return result;
-  }
-
-  async register( { password, username }: serviceNS.register.Arg ): Promise< serviceNS.register.Resp > {
-    const regRequestUser: CoreNS.UserInDb = await this.__hydrateUser( {
-      authorId: null,
-      userData: {
-        password,
-        username,
-        role: [ 'user' ],
-        status: 'registrationRequest',
-      },
-    } );
-
-    await this.__serviceAdapter.create( regRequestUser );
-
-    return { success: true, data: 'registrationRequestCreated' };
-  }
-
-  async getListForAdmin( arg: serviceNS.getListForAdmin.Arg ): Promise< serviceNS.getListForAdmin.Resp > {
-    const verifyAuthRes = await this.verifyAuth( { ...arg, allowedRoles: [ 'admin' ] } );
-    if ( verifyAuthRes.success === false ) return verifyAuthRes;
-
-    return {
-      success: true,
-      data: await this.__serviceAdapter.getList(),
-    };
-  }
-
-  async approveRegRequest( { jwt, id }: serviceNS.approveRegRequest.Arg ): Promise<serviceNS.approveRegRequest.Resp> {
-    const verifyRes = await this.verifyAuth( { jwt, allowedRoles: [ 'admin' ] } );
-    if ( verifyRes.success === false ) return verifyRes;
-
-    await this.__serviceAdapter.patch( {
-      id,
-      data: {
-        ...addWithHistory( {}, verifyRes.data.authData.id ),
-        status: 'registered',
-      },
-    } );
-
-    return tSuccessRes;
-  }
+  approveRegRequest = ( arg: serviceNS.approveRegRequest.Arg ): Promise<serviceNS.approveRegRequest.Resp> => (
+    approveRegRequestNS._( {
+      arg,
+      adapter: this.__serviceAdapter,
+      verifyAuth: this.verifyAuth,
+    } )
+  );
 }

@@ -9,7 +9,7 @@ import type * as ISO8601 from '@illia-web-dev/types/dist/types/ISO8601';
 import { UserServiceAdapter } from '../main';
 import * as envVarsNS from '../../../../utlis/envVariables';
 import { resetLogLevel, switchLoggerToErrorLevel } from '../../../../utlis/logger';
-import { setupMigrations } from '../../../../app_servicesSetup_migrations';
+import { setupDb } from '../../../../app_servicesSetup_db';
 import { getLocals } from '../../../../utlis/ILocals';
 import { describeWithTags, jestCleanUp } from '../../../../utlis/jest';
 import { adapterTagsArr } from '../../__testUtils';
@@ -34,7 +34,7 @@ describeWithTags( tags, tags.join( ' > ' ), () => {
   beforeAll( async () => {
     envVarsNS.overrideMongoUriForJest( 'x4L1I' );
 
-    await setupMigrations( app );
+    await setupDb( app );
   } );
   afterAll( async () => {
     await jestCleanUp( app );

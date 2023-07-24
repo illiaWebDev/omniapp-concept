@@ -10,7 +10,7 @@ import type * as patchNS from '@omniapp-concept/common/dist/services/User/adapte
 import { UserServiceAdapter } from '../main';
 import * as envVarsNS from '../../../../utlis/envVariables';
 import { resetLogLevel, switchLoggerToErrorLevel } from '../../../../utlis/logger';
-import { setupMigrations } from '../../../../app_servicesSetup_migrations';
+import { setupDb } from '../../../../app_servicesSetup_db';
 import { getLocals } from '../../../../utlis/ILocals';
 import { describeWithTags, jestCleanUp, testTags } from '../../../../utlis/jest';
 
@@ -32,7 +32,7 @@ describeWithTags( tags, tags.join( ' > ' ), () => {
   beforeAll( async () => {
     envVarsNS.overrideMongoUriForJest( 'lAnJzO' );
 
-    await setupMigrations( app );
+    await setupDb( app );
   } );
   afterAll( async () => {
     await jestCleanUp( app );

@@ -1,4 +1,4 @@
-import { Collection, Db } from 'mongodb';
+import type { Collection, Db } from 'mongodb';
 import type * as adapterNS from '@omniapp-concept/common/dist/services/User/adapter';
 import * as CoreNS from '@omniapp-concept/common/dist/services/User/core';
 import * as createNS from './create';

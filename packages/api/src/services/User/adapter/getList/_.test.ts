@@ -10,7 +10,7 @@ import { WithObjIdT } from '@omniapp-concept/common/dist/services/_common/WithOb
 import { UserServiceAdapter } from '../main';
 import * as envVarsNS from '../../../../utlis/envVariables';
 import { resetLogLevel, switchLoggerToErrorLevel } from '../../../../utlis/logger';
-import { setupMigrations } from '../../../../app_servicesSetup_migrations';
+import { setupDb } from '../../../../app_servicesSetup_db';
 import { getLocals } from '../../../../utlis/ILocals';
 import { describeWithTags, jestCleanUp, testTags } from '../../../../utlis/jest';
 
@@ -32,7 +32,7 @@ describeWithTags( tags, tags.join( ' > ' ), () => {
   beforeAll( async () => {
     envVarsNS.overrideMongoUriForJest( 'J0mUr7h2' );
 
-    await setupMigrations( app );
+    await setupDb( app );
   } );
   afterAll( async () => {
     await jestCleanUp( app );

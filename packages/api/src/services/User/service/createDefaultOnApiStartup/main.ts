@@ -3,17 +3,17 @@ import type * as serviceNS from '@omniapp-concept/common/dist/services/User/serv
 import * as CoreNS from '@omniapp-concept/common/dist/services/User/core';
 import { usernameForDefaultUser } from '@omniapp-concept/common/dist/services/User/core';
 import { logger } from '../../../../utlis/logger';
-import { HydrateUser, UserServiceConstructorArg } from '../types';
+import type { UserServiceConstructorArg } from '../types';
+import { hydrateUser } from '../__hydrateUser';
 
 
 export type Arg = {
   defaultUserPassword: string;
   adapter: UserServiceConstructorArg[ 'adp' ];
-  hydrateUser: HydrateUser;
 };
 
 export const _ = async ( arg: Arg ): Promise< serviceNS.createDefaultOnApiStartup.Resp > => {
-  const { defaultUserPassword, adapter, hydrateUser } = arg;
+  const { defaultUserPassword, adapter } = arg;
 
   logger.log( { level: 'debug', tags: [ 'user', 'createDefaultOnApiStartup' ] } );
 

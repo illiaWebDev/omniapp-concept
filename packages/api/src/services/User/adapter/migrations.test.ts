@@ -7,7 +7,7 @@ import type { BcryptPassword } from '@illia-web-dev/types/dist/types/BcryptPassw
 import * as envVarsNS from '../../../utlis/envVariables';
 import { addWithHistory } from '../../__common';
 import { resetLogLevel, switchLoggerToErrorLevel } from '../../../utlis/logger';
-import { setupMigrations } from '../../../app_servicesSetup_migrations';
+import { setupDb } from '../../../app_servicesSetup_db';
 import { getLocals } from '../../../utlis/ILocals';
 import { describeWithTags, jestCleanUp, testTags } from '../../../utlis/jest';
 
@@ -32,7 +32,7 @@ describeWithTags( tags, tags.join( ' > ' ), () => {
   beforeAll( async () => {
     envVarsNS.overrideMongoUriForJest( 'Rk5dat' );
 
-    await setupMigrations( app );
+    await setupDb( app );
   } );
   afterAll( async () => {
     await jestCleanUp( app );

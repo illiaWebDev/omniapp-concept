@@ -2,13 +2,13 @@ import express, { Express } from 'express';
 import { GetServices } from '@omniapp-concept/common/dist/services';
 import { getLocals, setInLocals } from './utlis';
 import * as servicesNS from './services';
-import { setupMigrations } from './app_servicesSetup_migrations';
+import { setupDb } from './app_servicesSetup_db';
 
 
 export const init = async (): Promise< Express > => {
   const app = express();
 
-  await setupMigrations( app );
+  await setupDb( app );
 
   // ===================================================================================
 

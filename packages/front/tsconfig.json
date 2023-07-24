@@ -15,11 +15,11 @@
     }
   },
   "include": [
-    "src/index.tsx",
-    "src/utils/general.d.ts",
-    "src/utils/index.ts",
-    "src/utils/stores/index.ts",
-    "src/sw/index.ts",
-    "src/components/index.ts"
+    "./src/index.tsx",
+    "./src/utils/general.d.ts",
+    "./src/utils/index.ts",
+    "./src/utils/stores/index.ts",
+    "./src/sw/index.ts",
+    "./src/components/index.ts"
   ],
 }

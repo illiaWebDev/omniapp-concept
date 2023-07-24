@@ -1,4 +1,4 @@
-import { Express } from 'express';
+import type { Express } from 'express';
 import { MongoClient } from 'mongodb';
 import path from 'path';
 import { config, up } from 'migrate-mongo';
@@ -7,7 +7,7 @@ import { setInLocals } from './utlis';
 import { logger } from './utlis/logger';
 
 
-export const setupMigrations = async ( app: Express ): Promise< void > => {
+export const setupDb = async ( app: Express ): Promise< void > => {
   const { MONGO_URI } = getEnvVars();
 
   // ===================================================================================

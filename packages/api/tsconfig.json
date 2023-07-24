@@ -2,13 +2,13 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "esModuleInterop": true,
-    "outDir": "dist",
+    "outDir": "./dist",
   },
   // "ts-node": {
   //   "files": true,
   // },
   "include": [
-    "src/index.ts",
-    "src/__aggregateTests.ts"
+    "./src/index.ts",
+    "./src/__aggregateTests.ts"
   ],
 }
