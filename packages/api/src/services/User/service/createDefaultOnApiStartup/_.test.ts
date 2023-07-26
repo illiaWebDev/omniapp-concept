@@ -7,9 +7,8 @@ import * as WithHistory from '@omniapp-concept/common/dist/services/_common/With
 import type * as adapterNS from '@omniapp-concept/common/dist/services/User/adapter';
 import * as UserCore from '@omniapp-concept/common/dist/services/User/core';
 import { ISO_8601_FULL } from '@omniapp-concept/common/dist/helpers';
-import type { GetServices } from '@omniapp-concept/common/dist/services';
 import { getFull } from '@illia-web-dev/types/dist/types/ISO8601/UTC';
-import { UserService } from '../main';
+import * as createDefaultOnApiStartupNS from './main';
 import * as envVarsNS from '../../../../utlis/envVariables';
 import { resetLogLevel, switchLoggerToErrorLevel } from '../../../../utlis/logger';
 import { describeWithTags } from '../../../../utlis/jest';
@@ -23,22 +22,23 @@ const dummyAdapter: adapterNS.Adapter = {
   getList: () => Promise.resolve( [] ),
   patch: () => Promise.resolve( true ),
 };
-const getServices = ( () => ( {} ) ) as GetServices;
 
-beforeAll( () => {
-  switchLoggerToErrorLevel();
-} );
-afterAll( () => {
-  resetLogLevel();
-} );
 
 const full = getFull();
 
 const tags = serviceTagsArr.concat( 'createDefaultOnApiStartup', 'dummyAdapter' );
 describeWithTags( tags, tags.join( ' > ' ), () => {
+  beforeAll( () => {
+    switchLoggerToErrorLevel();
+  } );
+  afterAll( () => {
+    resetLogLevel();
+  } );
+
+
   test( 'returns false if adapter.get responded with user in db', async () => {
-    const service = new UserService( {
-      adp: {
+    const result = await createDefaultOnApiStartupNS._( {
+      adapter: {
         ...dummyAdapter,
         get: () => Promise.resolve( {
           id: '' as UserId,
@@ -51,25 +51,21 @@ describeWithTags( tags, tags.join( ' > ' ), () => {
           username: usernameForDefaultUser,
         } ),
       },
-      getServices,
+      defaultUserPassword: '',
     } );
-
-    const result = await service.createDefaultOnApiStartup();
 
     expect( result ).toBe( false );
   } );
 
   test( 'returns false if adapter.get responded with null, but adapter.create returned false', async () => {
-    const service = new UserService( {
-      adp: {
+    const result = await createDefaultOnApiStartupNS._( {
+      adapter: {
         ...dummyAdapter,
         get: () => Promise.resolve( null ),
         create: () => Promise.resolve( false ),
       },
-      getServices,
+      defaultUserPassword: '',
     } );
-
-    const result = await service.createDefaultOnApiStartup();
 
     expect( result ).toBe( false );
   } );
@@ -82,21 +78,19 @@ describeWithTags( tags, tags.join( ' > ' ), () => {
 
     test( desc, async () => {
       const defaultUserPassword = 'password';
-      envVarsNS.overrideDefaultUserPasswordForJest( defaultUserPassword );
 
       const create: adapterNS.Adapter[ 'create' ] = () => Promise.resolve( true );
       const mockedCreate = jest.fn( create );
 
-      const service = new UserService( {
-        adp: {
+
+      const result = await createDefaultOnApiStartupNS._( {
+        adapter: {
           ...dummyAdapter,
           get: () => Promise.resolve( null ),
           create: mockedCreate,
         },
-        getServices,
+        defaultUserPassword,
       } );
-
-      const result = await service.createDefaultOnApiStartup();
 
       expect( result ).toBe( true );
 

@@ -2,12 +2,12 @@ export const tags = {
   UserService: 'UserService',
   adapter: 'adapter',
   service: 'service',
-};
-export const serviceTagsArr = [
+} as const;
+export const serviceTagsArr: string[] = [
   tags.UserService,
   tags.service,
 ];
-export const adapterTagsArr = [
+export const adapterTagsArr: string[] = [
   tags.UserService,
   tags.adapter,
 ];

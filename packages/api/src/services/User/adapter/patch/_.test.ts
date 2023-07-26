@@ -15,14 +15,6 @@ import { getLocals } from '../../../../utlis/ILocals';
 import { describeWithTags, jestCleanUp, testTags } from '../../../../utlis/jest';
 
 
-beforeAll( () => {
-  switchLoggerToErrorLevel();
-} );
-afterAll( () => {
-  resetLogLevel();
-} );
-
-
 // ===================================================================================
 
 const tags = [ testTags.UserService, testTags.adapter, 'patch' ];
@@ -31,12 +23,14 @@ describeWithTags( tags, tags.join( ' > ' ), () => {
 
   beforeAll( async () => {
     envVarsNS.overrideMongoUriForJest( 'lAnJzO' );
+    switchLoggerToErrorLevel();
 
     await setupDb( app );
   } );
   afterAll( async () => {
     await jestCleanUp( app );
 
+    resetLogLevel();
     envVarsNS.resetMongoUriForJest();
   } );
 

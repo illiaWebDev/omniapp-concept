@@ -17,13 +17,6 @@ import { adapterTagsArr } from '../../__testUtils';
 
 const { UserRole } = UserCore;
 
-beforeAll( () => {
-  switchLoggerToErrorLevel();
-} );
-afterAll( () => {
-  resetLogLevel();
-} );
-
 
 // ===================================================================================
 
@@ -33,6 +26,7 @@ describeWithTags( tags, tags.join( ' > ' ), () => {
 
   beforeAll( async () => {
     envVarsNS.overrideMongoUriForJest( 'x4L1I' );
+    switchLoggerToErrorLevel();
 
     await setupDb( app );
   } );
@@ -40,6 +34,7 @@ describeWithTags( tags, tags.join( ' > ' ), () => {
     await jestCleanUp( app );
 
     envVarsNS.resetMongoUriForJest();
+    resetLogLevel();
   } );
 
 

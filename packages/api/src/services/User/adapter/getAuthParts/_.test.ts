@@ -16,13 +16,6 @@ import { describeWithTags, jestCleanUp, testTags } from '../../../../utlis/jest'
 
 const { UserRole } = UserCore;
 
-beforeAll( () => {
-  switchLoggerToErrorLevel();
-} );
-afterAll( () => {
-  resetLogLevel();
-} );
-
 
 // ===================================================================================
 
@@ -32,12 +25,14 @@ describeWithTags( tags, tags.join( ' > ' ), () => {
 
   beforeAll( async () => {
     envVarsNS.overrideMongoUriForJest( 'CNnBwa' );
+    switchLoggerToErrorLevel();
 
     await setupDb( app );
   } );
   afterAll( async () => {
     await jestCleanUp( app );
 
+    resetLogLevel();
     envVarsNS.resetMongoUriForJest();
   } );
 

@@ -6,21 +6,13 @@ import * as UserCore from '@omniapp-concept/common/dist/services/User/core';
 import type { BcryptPassword } from '@illia-web-dev/types/dist/types/BcryptPassword';
 import type * as ISO8601 from '@illia-web-dev/types/dist/types/ISO8601';
 import type { Collection } from 'mongodb';
-import { WithObjIdT } from '@omniapp-concept/common/dist/services/_common/WithObjId';
+import type { WithObjIdT } from '@omniapp-concept/common/dist/services/_common/WithObjId';
 import { UserServiceAdapter } from '../main';
 import * as envVarsNS from '../../../../utlis/envVariables';
 import { resetLogLevel, switchLoggerToErrorLevel } from '../../../../utlis/logger';
 import { setupDb } from '../../../../app_servicesSetup_db';
 import { getLocals } from '../../../../utlis/ILocals';
 import { describeWithTags, jestCleanUp, testTags } from '../../../../utlis/jest';
-
-
-beforeAll( () => {
-  switchLoggerToErrorLevel();
-} );
-afterAll( () => {
-  resetLogLevel();
-} );
 
 
 // ===================================================================================
@@ -31,12 +23,14 @@ describeWithTags( tags, tags.join( ' > ' ), () => {
 
   beforeAll( async () => {
     envVarsNS.overrideMongoUriForJest( 'J0mUr7h2' );
+    switchLoggerToErrorLevel();
 
     await setupDb( app );
   } );
   afterAll( async () => {
     await jestCleanUp( app );
 
+    resetLogLevel();
     envVarsNS.resetMongoUriForJest();
   } );
 
