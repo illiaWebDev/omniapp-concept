@@ -27,7 +27,7 @@ export const _ = async ( arg: Arg ): Promise< serviceNS.login.Resp > => {
     const isPasswordCorrect = await compare( password, maybeAuthParts.password );
     if ( !isPasswordCorrect ) return serviceNS.login.INVALID_LOGIN_OR_PASSWORD_RESP;
 
-    const user = await adapter.get( { username, status: 'registered' } );
+    const user = await adapter.get( { id: maybeAuthParts.id, status: 'registered' } );
     if ( user === null ) return serviceNS.login.INVALID_LOGIN_OR_PASSWORD_RESP;
 
     const result: serviceNS.login.Resp = {

@@ -5,10 +5,10 @@ import { compare } from 'bcrypt';
 import type { UserId } from '@omniapp-concept/common/dist/helpers';
 import { hydrateUser, HydrateUser } from './main';
 import { describeWithTags } from '../../../../utlis/jest';
-import { tags } from '../../__testUtils';
+import { serviceTagsArr } from '../../__testUtils';
 
 
-const tagsArr = [ tags.UserService, '__hydrateUser' ];
+const tagsArr = serviceTagsArr.concat( '__hydrateUser' );
 describeWithTags( tagsArr, tagsArr.join( ' > ' ), () => {
   const password = 'password';
   const commonUserData: Parameters< HydrateUser >[ 0 ][ 'userData' ] = {

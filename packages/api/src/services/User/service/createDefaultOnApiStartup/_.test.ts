@@ -7,24 +7,12 @@ import * as WithHistory from '@omniapp-concept/common/dist/services/_common/With
 import type * as adapterNS from '@omniapp-concept/common/dist/services/User/adapter';
 import * as UserCore from '@omniapp-concept/common/dist/services/User/core';
 import { ISO_8601_FULL } from '@omniapp-concept/common/dist/helpers';
-import { getFull } from '@illia-web-dev/types/dist/types/ISO8601/UTC';
 import * as createDefaultOnApiStartupNS from './main';
 import * as envVarsNS from '../../../../utlis/envVariables';
 import { resetLogLevel, switchLoggerToErrorLevel } from '../../../../utlis/logger';
 import { describeWithTags } from '../../../../utlis/jest';
-import { serviceTagsArr } from '../../__testUtils';
+import { serviceTagsArr, dummyAdapter, full } from '../../__testUtils';
 
-
-const dummyAdapter: adapterNS.Adapter = {
-  create: () => Promise.resolve( true ),
-  get: () => Promise.resolve( null ),
-  getAuthParts: () => Promise.resolve( null ),
-  getList: () => Promise.resolve( [] ),
-  patch: () => Promise.resolve( true ),
-};
-
-
-const full = getFull();
 
 const tags = serviceTagsArr.concat( 'createDefaultOnApiStartup', 'dummyAdapter' );
 describeWithTags( tags, tags.join( ' > ' ), () => {

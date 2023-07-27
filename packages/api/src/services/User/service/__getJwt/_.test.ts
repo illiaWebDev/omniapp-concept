@@ -3,13 +3,13 @@ import { test, expect } from '@jest/globals';
 import type { UserId } from '@omniapp-concept/common/dist/helpers/UserUtils';
 import { decodeJWT } from '@omniapp-concept/common/dist/services/User/authParts';
 import { getFull } from '@illia-web-dev/types/dist/types/ISO8601/UTC';
-import { EpochSecond } from '@illia-web-dev/types/dist/types';
+import type { EpochSecond } from '@illia-web-dev/types/dist/types';
 import { getJwt } from './main';
 import { describeWithTags } from '../../../../utlis/jest';
-import { tags } from '../../__testUtils';
+import { serviceTagsArr } from '../../__testUtils';
 
 
-const tagsArr = [ tags.UserService, '__getJwt' ];
+const tagsArr = serviceTagsArr.concat( '__getJwt' );
 describeWithTags( tagsArr, tagsArr.join( ' > ' ), () => {
   test( 'creates jwt successfully', () => {
     const userId = 'userId' as UserId;
