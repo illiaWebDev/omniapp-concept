@@ -5,3 +5,5 @@ import {} from './approveRegRequest/_.test';
 import {} from './getListForAdmin/_.test';
 import {} from './getMe/_.test';
 import {} from './login/_.test';
+import {} from './register/_.test';
+import {} from './verifyAuth/_.test';

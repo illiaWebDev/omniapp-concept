@@ -5,7 +5,7 @@ import type { UserId } from '@omniapp-concept/common/dist/helpers/UserUtils';
 import type * as adapterNS from '@omniapp-concept/common/dist/services/User/adapter';
 import type { ExcludeTFailure, ExcludeTSuccess } from '@illia-web-dev/types/dist/types/CommonRes';
 import { SYSTEM } from '@omniapp-concept/common/dist/services/_common/WithHistory';
-import { UserOutOfDb } from '@omniapp-concept/common/dist/services/User/core';
+import type { UserOutOfDb } from '@omniapp-concept/common/dist/services/User/core';
 import type { BcryptPassword } from '@illia-web-dev/types/dist/types/BcryptPassword';
 import { decodeJWT } from '@omniapp-concept/common/dist/services/User/authParts';
 import * as loginNS from './main';
