@@ -15,7 +15,7 @@ export type WithObjIdT = {
 
 export const properties: PropertiesSchema< WithObjIdT > = {
   // we only need this field so that mongo doesn't complain about
-  // _id field, but we need no validation, so migt as well cast
+  // _id field, but we need no validation, so might as well cast
   // to any to avoid any type issues
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [ props._id ]: {} as any,
