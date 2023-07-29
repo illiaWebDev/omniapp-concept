@@ -53,25 +53,26 @@ sw.addEventListener( 'activate', e => {
 } );
 
 // Fetching content using Service Worker
-// sw.addEventListener( 'fetch', e => {
-//   e.respondWith( ( async () => {
-//     await ( async () => {
-//       if ( e.request.url.startsWith( 'http' ) === false ) {
-//         return;
-//       }
+sw.addEventListener( 'fetch', e => {
+  void e;
+  // e.respondWith( ( async () => {
+  //   await ( async () => {
+  //     if ( e.request.url.startsWith( 'http' ) === false ) {
+  //       return;
+  //     }
 
-//       console.log( `[Service Worker] Skipped caching resource ${ e.request.url }` );
+  //     console.log( `[Service Worker] Skipped caching resource ${ e.request.url }` );
 
-//       // const r = await caches.match( e.request );
+  //     // const r = await caches.match( e.request );
 
-//       // if ( r ) return r;
-//       // const response = await;
-//       // const cache = await caches.open( cacheName );
-//       // console.log( `[Service Worker] Caching new resource: ${ e.request.url }` );
-//       // cache.put( e.request, response.clone() );
-//     } )();
+  //     // if ( r ) return r;
+  //     // const response = await;
+  //     // const cache = await caches.open( cacheName );
+  //     // console.log( `[Service Worker] Caching new resource: ${ e.request.url }` );
+  //     // cache.put( e.request, response.clone() );
+  //   } )();
 
-//     console.log( `[Service Worker] Fetching resource: ${ e.request.url }` );
-//     return fetch( e.request );
-//   } )() );
-// } );
+  //   console.log( `[Service Worker] Fetching resource: ${ e.request.url }` );
+  //   return fetch( e.request );
+  // } )() );
+} );

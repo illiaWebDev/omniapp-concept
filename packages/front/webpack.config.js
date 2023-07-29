@@ -76,6 +76,7 @@ const config = {
 
     devServer: {
       port: 3003,
+      allowedHosts: 'all',
       static: {
         directory: publicDir,
         watch: false,
