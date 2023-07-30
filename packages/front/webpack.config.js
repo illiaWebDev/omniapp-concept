@@ -3,17 +3,20 @@
 // eslint-disable-next-line strict, lines-around-directive
 'use strict';
 
+require( 'dotenv' ).config( { path: './.env' } );
+
 const path = require( 'path' );
 const HtmlWebpackPlugin = require( 'html-webpack-plugin' );
 const ForkTsCheckerWebpackPlugin = require( 'fork-ts-checker-webpack-plugin' );
 const ReactRefreshWebpackPlugin = require( '@pmmmwh/react-refresh-webpack-plugin' );
 const { uploadTinyMCEImageRoute } = require( '@omniapp-concept/common/dist/helpers/uploadTinyMCEImageRoute' );
 const Dotenv = require( 'dotenv-webpack' );
+const { NODE_ENV, API_URL_PREFIX } = require( './src/utils/envVariables' );
 
 
 const publicDir = path.resolve( __dirname, './public' );
-const isProd = process.env.NODE_ENV === 'production';
-const isDevBuild = process.env.NODE_ENV === 'devbuild';
+const isProd = NODE_ENV === 'production';
+const isDevBuild = NODE_ENV === 'devbuild';
 
 /** @type { import( 'webpack-dev-server' ).WebpackConfiguration } */
 const config = {
@@ -85,6 +88,10 @@ const config = {
       historyApiFallback: true,
       proxy: {
         [ uploadTinyMCEImageRoute ]: 'http://localhost:3002',
+        [ API_URL_PREFIX ]: {
+          target: 'http://localhost:3001',
+          pathRewrite: path => path.replace( API_URL_PREFIX, '' ),
+        },
       },
     },
     devtool: 'source-map',

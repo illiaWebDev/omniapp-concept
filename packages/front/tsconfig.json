@@ -3,6 +3,7 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist",
+    "allowJs": true,
     "jsx": "react",
     "esModuleInterop": true,
     "lib": ["DOM", "ESNext", "WebWorker"],

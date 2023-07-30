@@ -1,5 +1,5 @@
 import { select } from 'redux-saga/effects';
-import { API_URL_FROM_BROWSER } from './envVariables';
+import { API_URL_PREFIX } from './envVariables';
 import type { RootState } from './stores/redux_constants';
 
 
@@ -22,7 +22,7 @@ export function* fetchSaga( { path, body, jwtOverrideForAutologin }: FetchSagaAr
   const { auth: { data } }: RootState = yield select();
   const effectiveJwt = jwtOverrideForAutologin || ( data && data.jwtToken );
 
-  const rtrn = yield fetch( `${ API_URL_FROM_BROWSER }${ path }`, {
+  const rtrn = yield fetch( `${ API_URL_PREFIX }${ path }`, {
     method: 'post',
     headers: {
       Accept: 'application/json',

@@ -50,7 +50,7 @@ COPY \
 ./packages/front/src
 
 ARG NODE_ENV
-ARG API_URL_FROM_BROWSER
+ARG API_URL_PREFIX
 
 RUN true\
 && cd ./packages/common \
@@ -68,6 +68,7 @@ FROM nginx:latest
 
 ARG API_PORT
 ARG NGINX_SERVER_NAME
+ARG API_URL_PREFIX
 
 
 COPY \
@@ -80,7 +81,7 @@ COPY \
 COPY \
 ./packages/front/public/bootstrap_5_3_0.js \
 ./packages/front/public/bootstrapSolar.min.css \
-./packages/front/public/app.webmanifest \
+./packages/front/public/manifest.json \
 ./packages/front/public/fontAwesome.js \
 ./packages/front/public/styles.css \
 /www/public/
@@ -96,7 +97,7 @@ COPY --from=builder \
 
 
 RUN true  \
-&& envsubst '${API_PORT} ${NGINX_SERVER_NAME}' < /etc/nginx/nginx.conf > /etc/nginx/nginx2.conf \
+&& envsubst '${API_PORT} ${NGINX_SERVER_NAME} ${API_URL_PREFIX}' < /etc/nginx/nginx.conf > /etc/nginx/nginx2.conf \
 && rm /etc/nginx/nginx.conf \
 && mv /etc/nginx/nginx2.conf /etc/nginx/nginx.conf \
 && true
